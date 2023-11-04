@@ -1,28 +1,30 @@
 import { NavLink } from 'react-router-dom'
-import { ReactComponent as Brand } from '../../assets/uc thrift 2.svg'
 
 const Navbar = () => {
     return (
         <nav>
             <div>
-                <Brand /> 
+                <img src="../../../src/assets/uc thrift 2.svg" alt="logo" />
             </div>
             <div>
                 <ul>
                     <li>
-                        <NavLink to="/">Textbooks</NavLink>
+                        <NavLink to="/">Home</NavLink>
                     </li>
                     <li>
-                        <NavLink to href="/Clothes"></NavLink>
+                        <NavLink to="/textbooks">Textbooks</NavLink>
                     </li>
                     <li>
-                        <NavLink to="Utility"></NavLink>
+                        <NavLink to="/clothes">Clothes</NavLink>
                     </li>
                     <li>
-                        <NavLink to="Misc"></NavLink>
+                        <NavLink to="/utility">Utility</NavLink>
                     </li>
                     <li>
-                        <NavLink to="Profile"></NavLink>
+                        <NavLink to="/misc">Misc</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/profile">Profile</NavLink>
                     </li>
                 </ul>
             </div>
