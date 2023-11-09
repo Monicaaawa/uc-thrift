@@ -50,12 +50,16 @@ const Searchbar = () => {
 
     return (
         <>
-            <input 
-            type="text"
-            placeholder="Search here"
-            onChange={handleChange}
-            value={searchItems} 
-            />
+            <div className="search-container">
+                <input 
+                className="search"
+                type="text"
+                placeholder="Search here"
+                onChange={handleChange}
+                value={searchItems} 
+                />
+                <img className="search-icon" src="../../../src/assets/searchbarIcon.svg" alt="search icon" />
+            </div>
 
             {filteredItems.map((item) => (
                 <div className="box" key={item.id}>
