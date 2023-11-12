@@ -1,0 +1,54 @@
+/* Container for entire profile page */
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-left: 100px
+  }
+
+  .profile-details {
+    margin-top: 200px;
+  }
+  
+  .profile-detail-others {
+  line-height: 0.5;
+  font-family: 'Gotham';
+  margin-bottom: 50px;
+}
+
+.sold-items-list, .bought-items-list {
+  list-style: none;
+  display: flex;
+  margin-bottom: 50px;
+}
+
+.sold-items-list li, .bought-items-list li {
+  margin-right: 10px;
+}
+
+.sold-items-list img, .bought-items-list img {
+  width: 250px; 
+  height: 250px; 
+  object-fit: cover; 
+  object-position: center; 
+}
+
+.reviews-list {
+  list-style: none;
+}
+
+.reviews-list li {
+  margin-bottom: 50px;
+}
+
+.reviewer-name {
+  font-size: 18px;
+}
+
+.reviewer-text {
+  font-size: 14px;
+}
+
+ .review-name-container {
+  line-height: 0.5px;
+ }
