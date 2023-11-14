@@ -90,18 +90,10 @@ app.post('/users/new', async (req, res) => {
     }
 
     const user = new User({
+        name: req.body.name,
         email: req.body.email,
         password: req.body.password
     });
-
-    // If the username is specified in the request, use the specified username
-    // Otherwise user email as username
-    if (req.body.username) {
-        user.username = req.body.username;
-    }
-    else {
-        user.username = req.body.email;
-    }
 
     await user.save();
 
