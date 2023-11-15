@@ -17,7 +17,7 @@ const User = mongoose.model("User", new mongoose.Schema({
         type: Number,
         default: 5
     },
-    postedItems: {
+    postedItemIds: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Item'
