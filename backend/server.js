@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-connection = "mongodb+srv://jayeNay:1021King@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
