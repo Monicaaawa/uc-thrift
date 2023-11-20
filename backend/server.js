@@ -43,7 +43,7 @@ mongoose
     .then (() => console. log("Connected to DB"))
     .catch (console.error);
 
-const Item = require('./models/Item');
+const Item = require('./models/item');
 const User = require('./models/user');
 
 app.listen(8080, () => console.log('Server listening on port 8080: http://localhost:8080'));
