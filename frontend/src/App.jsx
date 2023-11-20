@@ -1,17 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/navigation/Navbar';
-import Searchbar from './components/navigation/Searchbar';
-import ProfilePage from './pages/profile'; // Import the ProfilePage component
+import Home from './pages/home';
+import ProfilePage from './pages/profile';
+import Register from './pages/signup';
+import Login from './pages/signin';
 import DetailsPage from './pages/details';
 
 function App() {
   return (
     <Router>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Searchbar />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/item-details/:itemId" element={<DetailsPage />} />
       </Routes>
     </Router>
@@ -19,3 +21,6 @@ function App() {
 }
 
 export default App;
+
+
+

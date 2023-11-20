@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net/"
+connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
@@ -151,29 +151,54 @@ app.get('/users/:_id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-    
-// Create new user 
-app.post('/users/new', async (req, res) => {
-    try {
-        const dupUser = await User.findOne({ email: req.body.email });
-        if (dupUser) {
-            res.json({ error: 'Email address is already registered.' });
+
+// Log in to user account
+app.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    User.findOne({email: email})
+    .then(user => {
+        if(user) {
+            if(user.password === password) {
+                res.json('Success');
+            } else {
+                res.json({'error': 'Incorrect password.'});
+            }
+        } else {
+            res.json({'error': 'Email address is not registered.'});
             return;
         }
+    })
+});
 
-        const user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        });
-
-        await user.save();
-
-        res.json(user);
-    } catch (error) {
-        console.error('Error creating a new user:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+// Log in to user account
+app.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    User.findOne({email: email})
+    .then(user => {
+        if(user) {
+            if(user.password === password) {
+                res.json('Success');
+            } else {
+                res.json({'error': 'Incorrect password.'});
+            }
+        } else {
+            res.json({'error': 'Email address is not registered.'});
+            return;
+        }
+    })
+});
+    
+// Create new user 
+app.post('/register', async (req, res) => {
+    const dupUser = await User.findOne({ email: req.body.email });
+    if (dupUser) {
+        res.json({ error: 'Email address is already registered.' });
+        return;
     }
+
+    User.create(req.body)
+    .then(users => res.json(users))
+    .catch(err => res.json(err))
 });
 
 // Delete user
@@ -226,27 +251,6 @@ app.get('/users/posted-items/:_id', async (req, res) => {
         res.json(postedItems);
     } catch (error) {
         console.error('Error fetching posted items:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
-// Log in user account
-app.post('/login', async (req, res) => {
-    try {
-        const user = await User.findOne({ email: req.body.email });
-
-        if (!user) {
-            res.json({ 'error': 'Email address is not registered.'})
-            return;
-        }
-        
-        if (user.password === req.body.password) {
-            res.json(user);
-        } else {
-            res.json({ 'error': 'Incorrect password.'})
-        }
-    } catch (error) {
-        console.error('Error logging in:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
