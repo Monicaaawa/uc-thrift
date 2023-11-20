@@ -27,58 +27,129 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
     
 // ITEMS ENDPOINTS
 
-// Get items
+// Get all items
 app.get('/items', async (req, res) => {
-    const item = await Item.find();
+    try {
+        const items = await Item.find();
+        res.json(items);
+    } catch (error) {
+        console.error('Error fetching items:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    res.json(item);
+// Get item by id
+app.get('/items/:_id', async (req, res) => {
+    try {
+        const item = await Item.findById(req.params._id);
+
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error fetching item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Create new item
-app.post('/items/new', (req, res) => {
-    const currentUser = req.user;
+app.post('/items/new', async (req, res) => {
+    // const currentUser = req.user;
 
     const item = new Item({
         title: req.body.title,
-        seller: currentUser._id,
+        // sellerId: currentUser._id,
+        sellerId: req.body.sellerId,
         price: req.body.price,
         condition: req.body.condition,
         description: req.body.description,
         timestamp: Date.now(),
     });
 
-    item.save();
+    try {
+        await item.save();
 
-    res.json(item);
+        // Update the seller's postedItemIds array with the new item's _id
+        const seller = await User.findById(req.body.sellerId);
+        if (seller) {
+            seller.postedItemIds.push(item._id);
+            await seller.save();
+        }
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error creating a new item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
     
 // Edit item details
 app.put('/items/edit/:_id', async (req, res) => {
-    const item = await Item.findById(req.params._id);
+    try {
+        const item = await Item.findById(req.params._id);
 
-    item.price = req.body.price,
-    item.condition = req.body.condition,
-    item.description = req.body.description,
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
 
-    item.save();
+        item.price = req.body.price;
+        item.condition = req.body.condition;
+        item.description = req.body.description;
 
-    res.json(item);
+        await item.save();
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error editing item details:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
     
 // Delete item
 app.delete('/items/delete/:_id', async (req, res) => {
-    const result = await Item.findByIdAndDelete(req.params._id);
+    try {
+        const result = await Item.findByIdAndDelete(req.params._id);
 
-    res.json(result);
+        if (!result) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error deleting item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
     
 // USER ENDPOINTS
 
 // Get all users
 app.get('/users', async (req, res) => {
-    const users = await User.find();
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    res.json(users);
+// Get user by id
+app.get('/users/:_id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params._id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Log in to user account
@@ -114,25 +185,54 @@ app.post('/register', async (req, res) => {
 
 // Delete user
 app.delete('/users/delete/:_id', async (req, res) => {
-    const result = await User.findByIdAndDelete(req.params._id);
+    try {
+        const result = await User.findByIdAndDelete(req.params._id);
 
-    res.json(result);
+        if (!result) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Edit user information
 app.put('/users/edit/:_id', async (req, res) => {
-    const user = await User.findById(req.params._id);
+    try {
+        const user = await User.findById(req.params._id);
 
-    user.username = req.body.username;
-    user.password = req.body.password;
-    user.save();
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-    res.json(user);
+        user.username = req.body.username;
+        user.password = req.body.password;
+        await user.save();
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error editing user information:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
-app.get('/users/posted-items', async (req, res) => {
-    const user = await User.findById(req.params._id);
-    const postedItems = user.postedItems;
+// Access all posted items of a user
+app.get('/users/posted-items/:_id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params._id);
 
-    res.json(postedItems);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const postedItems = await Item.find({ _id: { $in: user.postedItemIds } });
+
+        res.json(postedItems);
+    } catch (error) {
+        console.error('Error fetching posted items:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
