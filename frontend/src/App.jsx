@@ -4,6 +4,7 @@ import Home from './pages/home';
 import ProfilePage from './pages/profile';
 import Register from './pages/signup';
 import Login from './pages/signin';
+import DetailsPage from './pages/details';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/item-details/:itemId" element={<DetailsPage />} />
       </Routes>
     </Router>
   );
