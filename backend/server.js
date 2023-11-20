@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcrypt');
 const fs = require('fs');
 
 mongoose.set('strictQuery', false);
@@ -130,7 +131,7 @@ app.delete('/items/delete-image/:itemId/:imageName', async (req, res) => {
 });
     
 // USER ENDPOINTS
-
+const saltRounds = 10;
 // Get all users
 app.get('/users', async (req, res) => {
     const users = await User.find();
@@ -140,33 +141,48 @@ app.get('/users', async (req, res) => {
 
 // Log in to user account
 app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    User.findOne({email: email})
-    .then(user => {
-        if(user) {
-            if(user.password === password) {
-                res.json('Success');
-            } else {
-                res.json({'error': 'Incorrect password.'});
-            }
-        } else {
-            res.json({'error': 'Email address is not registered.'});
-            return;
+    try 
+    {
+        const {email, password} = req.body;
+        const user = await User.findOne({ email: email });
+        if (user && await bcrypt.compare(password, user.password)) 
+        {
+            res.json('Success');
+        } 
+        else 
+        {
+            res.status(400).json({ error: 'Invalid email or password.' });
         }
-    })
+    } 
+    catch (err) 
+    {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
     
 // Create new user 
 app.post('/register', async (req, res) => {
-    const dupUser = await User.findOne({ email: req.body.email });
-    if (dupUser) {
-        res.json({ error: 'Email address is already registered.' });
-        return;
-    }
+    try {
+        const dupUser = await User.findOne({ email: req.body.email });
+        if (dupUser) {
+            return res.status(400).json({ error: 'Email address is already registered.' });
+        }
 
-    User.create(req.body)
-    .then(users => res.json(users))
-    .catch(err => res.json(err))
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+        const user = new User({
+            ...req.body,
+            password: hashedPassword,
+            confirmedPassword: hashedPassword
+        });
+
+        await user.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } 
+    catch (err) 
+    {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Delete user
@@ -178,13 +194,26 @@ app.delete('/users/delete/:_id', async (req, res) => {
 
 // Edit user information
 app.put('/users/edit/:_id', async (req, res) => {
-    const user = await User.findById(req.params._id);
+    try {
+        const user = await User.findById(req.params._id);
+        
+        if (!user) 
+        {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        user.password = hashedPassword;
+        const hashedConfirmedPassword = await bcrypt.hash(req.body.confirmedPassword, saltRounds);
+        user.confirmedPassword = hashedConfirmedPassword;
+        user.username = req.body.username;
 
-    user.username = req.body.username;
-    user.password = req.body.password;
-    user.save();
-
-    res.json(user);
+        user.save();
+        res.json({ message: 'User information updated successfully' });
+    }
+    catch (err)
+    {
+        res.status(500).json({ error: 'Internal server error'});
+    }
 });
 
 app.get('/users/posted-items', async (req, res) => {
