@@ -1,51 +1,28 @@
 import {useState} from 'react'
+import axios from 'axios';
 import './Searchbar.css'
 
 const Searchbar = () => {
     const [searchItems, setSearchItems] = useState("");
     const [filteredItems, setFilteredItems] = useState([]);
 
-    const hardCodeItems = [
-        {
-            id: 1,
-            name: 'Math 33A Textbook', 
-            type: 'School'
-        },
-        {
-            id: 2,
-            name: 'Chair',
-            type: 'Utility',
-          },
-          {
-            id: 3,
-            name: 'Table',
-            type: 'Utility',
-          },
-          {
-            id: 4,
-            name: 'Arduino kit',
-            type: 'School',
-          },
-          {
-            id: 5,
-            name: 'Skateboard',
-            type: 'Utility',
-          },
-          {
-            id: 6,
-            name: 'T-shirt',
-            type: 'Clothes',
-          },
-    ];
-
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const target = e.target.value.toLowerCase();
         setSearchItems(target);
 
-        const filtered = hardCodeItems.filter((item) => {
-            return item.name.toLowerCase().includes(searchItems);
-        });
-        setFilteredItems(filtered);
+        try {
+            const response = await axios.get(`http://localhost:8080/items?search=${target}`);
+            const items = response.data;
+            console.log("items: ", items)
+            setFilteredItems(items)
+        } catch (error) {
+            console.log("Error fetching items: ", error); 
+        }
+
+        // const filtered = hardCodeItems.filter((item) => {
+        //     return item.name.toLowerCase().includes(searchItems);
+        // });
+        // setFilteredItems(filtered);
     };
 
     return (
@@ -63,8 +40,8 @@ const Searchbar = () => {
 
             {filteredItems.map((item) => (
                 <div className="box" key={item.id}>
-                    <p>{item.name}</p>
-                    <p>{item.type}</p>
+                    <p>{item.title}</p>
+                    <p>{item.price}</p>
                 </div>
             ))}  
         </>

@@ -7,7 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+// DON'T PUSH THIS CONNECTION STRING AND CHANGE BACK TO DEFAULTS
+connection = "mongodb+srv://angela:12345@ucthrift-dev.xpujbsq.mongodb.net/?retryWrites=true&w=majority"
 
 // INIT CONNECTION
 mongoose
@@ -29,7 +30,8 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
 
 // Get items
 app.get('/items', async (req, res) => {
-    const item = await Item.find();
+    const searchQuery = req.query.search || '';
+    const item = await Item.find({ title: { $regex: new RegExp(searchQuery, 'i') } });
 
     res.json(item);
 });
