@@ -21,6 +21,10 @@ const User = mongoose.model("User", new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: false
+    },
     rating: {
         type: Number,
         default: 5

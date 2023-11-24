@@ -1,11 +1,34 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
+const bcrypt = require('bcrypt');
+const fs = require('fs');
+
 mongoose.set('strictQuery', false);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const uploadsDir = './uploads';
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static('uploads'));
 
 connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
@@ -122,9 +145,44 @@ app.delete('/items/delete/:_id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// Add item images
+app.post('/items/upload-images', upload.array('images', 5), async (req, res) => {
+    const item = await Item.findById(req.body.itemId);
+    if (!item) {
+        return res.status(404).send('Item not found');
+    }
+
+    const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+    item.images.push(...imagePaths);
+    await item.save();
+
+    res.json({ message: 'Images uploaded successfully', imagePaths: item.images });
+});
+
+// Delete item images(individual)
+app.delete('/items/delete-image/:itemId/:imageName', async (req, res) => {
+    const item = await Item.findById(req.params.itemId);
+    if (!item) {
+        return res.status(404).send('Item not found');
+    }
+
+    const imageToDelete = `/uploads/${req.params.imageName}`;
+    item.images = item.images.filter(image => image !== imageToDelete);
+    await item.save();
+
+    fs.unlink(path.join(__dirname, imageToDelete), (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error deleting the file');
+        }
+    });
+
+    res.send('Image deleted successfully');
+});
     
 // USER ENDPOINTS
-
+const saltRounds = 10;
 // Get all users
 app.get('/users', async (req, res) => {
     try {
@@ -154,33 +212,48 @@ app.get('/users/:_id', async (req, res) => {
 
 // Log in to user account
 app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    User.findOne({email: email})
-    .then(user => {
-        if(user) {
-            if(user.password === password) {
-                res.json('Success');
-            } else {
-                res.json({'error': 'Incorrect password.'});
-            }
-        } else {
-            res.json({'error': 'Email address is not registered.'});
-            return;
+    try 
+    {
+        const {email, password} = req.body;
+        const user = await User.findOne({ email: email });
+        if (user && await bcrypt.compare(password, user.password)) 
+        {
+            res.json('Success');
+        } 
+        else 
+        {
+            res.status(400).json({ error: 'Invalid email or password.' });
         }
-    })
+    } 
+    catch (err) 
+    {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
     
 // Create new user 
 app.post('/register', async (req, res) => {
-    const dupUser = await User.findOne({ email: req.body.email });
-    if (dupUser) {
-        res.json({ error: 'Email address is already registered.' });
-        return;
-    }
+    try {
+        const dupUser = await User.findOne({ email: req.body.email });
+        if (dupUser) {
+            return res.status(400).json({ error: 'Email address is already registered.' });
+        }
 
-    User.create(req.body)
-    .then(users => res.json(users))
-    .catch(err => res.json(err))
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+        const user = new User({
+            ...req.body,
+            password: hashedPassword,
+            confirmedPassword: hashedPassword
+        });
+
+        await user.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } 
+    catch (err) 
+    {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // Delete user
@@ -204,16 +277,21 @@ app.put('/users/edit/:_id', async (req, res) => {
     try {
         const user = await User.findById(req.params._id);
 
-        if (!user) {
+        if (!user) 
+        {
             return res.status(404).json({ error: 'User not found' });
         }
-
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        user.password = hashedPassword;
+        const hashedConfirmedPassword = await bcrypt.hash(req.body.confirmedPassword, saltRounds);
+        user.confirmedPassword = hashedConfirmedPassword;
         user.username = req.body.username;
-        user.password = req.body.password;
-        await user.save();
 
-        res.json(user);
-    } catch (error) {
+        await user.save();
+         res.json(user);
+    }
+    catch (error)
+    {
         console.error('Error editing user information:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -223,7 +301,6 @@ app.put('/users/edit/:_id', async (req, res) => {
 app.get('/users/posted-items/:_id', async (req, res) => {
     try {
         const user = await User.findById(req.params._id);
-
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -235,4 +312,38 @@ app.get('/users/posted-items/:_id', async (req, res) => {
         console.error('Error fetching posted items:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+
+// Add profile photo
+app.post('/users/upload-profile-picture', upload.single('image'), async (req, res) => {
+    const user = await User.findById(req.body.userId);
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    user.image = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.json({ message: 'Profile picture uploaded successfully', imagePath: user.image });
+});
+
+// Delete profile photo
+app.delete('/users/delete-profile-picture/:userId', async (req, res) => {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    const imagePath = user.image;
+    user.image = "";
+    await user.save();
+
+    fs.unlink(path.join(__dirname, imagePath), (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error deleting the file');
+        }
+    });
+
+    res.send('Profile picture deleted successfully');
 });
