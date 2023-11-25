@@ -1,5 +1,6 @@
 import Navbar from "../components/navigation/Navbar";
-import Searchbar from "../components/navigation/Searchbar";
+import Searchbar from "../components/search/Searchbar";
+import DropdownFilter from "../components/search/DropdownFilter";
 
 function Home()
 {
@@ -7,6 +8,7 @@ function Home()
         <>
             <Navbar />
             <Searchbar />
+            <DropdownFilter />
         </>
     )
 }

@@ -13,16 +13,10 @@ const Searchbar = () => {
         try {
             const response = await axios.get(`http://localhost:8080/items?search=${target}`);
             const items = response.data;
-            console.log("items: ", items)
             setFilteredItems(items)
         } catch (error) {
             console.log("Error fetching items: ", error); 
         }
-
-        // const filtered = hardCodeItems.filter((item) => {
-        //     return item.name.toLowerCase().includes(searchItems);
-        // });
-        // setFilteredItems(filtered);
     };
 
     return (
