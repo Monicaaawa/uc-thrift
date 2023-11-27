@@ -55,7 +55,7 @@ function SignUp() {
 
     const isValidEmailDomain = (email) => {
         const domain = email.split('@')[1];
-        return validEmailDomains.some(validDomain => domain === validDomain);
+        return validEmailDomains.some(validDomain => domain.endsWith(`.${validDomain}`));
     };
 
     const getCampus = (email) => {
@@ -73,7 +73,13 @@ function SignUp() {
             'ucsc.edu': 'UC Santa Cruz',
         };
     
-        return campusMap[domain] || '';
+        for (const key in campusMap) {
+            if (domain.endsWith(`.${key}`)) {
+                return campusMap[key];
+            }
+        }
+    
+        return '';
     };
 
     return (
