@@ -11,18 +11,32 @@ function SignUp() {
     const [confirmedPassword, setConfirm] = useState()
     const [error, setError] = useState()
     const navigate = useNavigate()
+    const validEmailDomains = ['berkeley.edu', 'ucdavis.edu', 'uci.edu', 'ucla.edu', 'ucmerced.edu', 'ucr.edu', 'ucsd.edu', 'ucsf.edu', 'ucsb.edu', 'ucsc.edu'];
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if (!isPasswordValid(password)) {
+            setError("Password must be at least 8 characters long and have at least one uppercase letter and special character.");
+            return;
+        }
+
         if(password !== confirmedPassword)
         {
             setError("Passwords do not match.");
             return;
         }
 
+        if (!isValidEmailDomain(email)) {
+            setError("Please use a valid UC campus email address.");
+            return;
+        }
+
         setError(null);
 
-        axios.post('http://localhost:8080/register', {email, firstName, lastName, password, confirmedPassword})
+        const campus = getCampus(email);
+        console.log(campus)
+
+        axios.post('http://localhost:8080/register', {email, firstName, lastName, campus, password})
         .then(result => {
             console.log(result)
             navigate('/login')
@@ -31,7 +45,36 @@ function SignUp() {
             console.log(err)
             setError(err.response.data.error || 'An error occurred.');
         })
+    };
+
+    const isPasswordValid = (password) => {
+        // At least 8 characters long, at least one uppercase letter, and at least one special character
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+        return passwordRegex.test(password);
     }
+
+    const isValidEmailDomain = (email) => {
+        const domain = email.split('@')[1];
+        return validEmailDomains.some(validDomain => domain === validDomain);
+    };
+
+    const getCampus = (email) => {
+        const domain = email.split('@')[1];
+        const campusMap = {
+            'berkeley.edu': 'UC Berkeley',
+            'ucdavis.edu': 'UC Davis',
+            'uci.edu': 'UC Irvine',
+            'ucla.edu': 'UCLA',
+            'ucmerced.edu': 'UC Merced',
+            'ucr.edu': 'UC Riverside',
+            'ucsd.edu': 'UC San Diego',
+            'ucsf.edu': 'UC San Francisco',
+            'ucsb.edu': 'UC Santa Barbara',
+            'ucsc.edu': 'UC Santa Cruz',
+        };
+    
+        return campusMap[domain] || '';
+    };
 
     return (
         <div className="page-center">
@@ -78,7 +121,7 @@ function SignUp() {
                     className="input"
                     onChange={(e) => setConfirm(e.target.value)}
                 />
-                {error && <p style={{ color: 'red', top: '505px', position: 'absolute' }}>{error}</p>}
+                {error && <p style={{ color: 'red', top: '505px', position: 'absolute', width: 450 }}>{error}</p>}
                 <button style={{marginTop: 35 + 'px'}} type="submit">
                     join now
                 </button>

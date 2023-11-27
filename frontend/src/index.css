@@ -33,14 +33,14 @@ body {
 
 @font-face {
   font-family: 'Gotham Bold'; 
-  src: url('assets/Gotham\ Bold.otf') format('opentype');
+  src: url('assets/GothamBold.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Gotham Medium'; 
-  src: url('assets/Gotham\ Medium.otf') format('opentype');
+  src: url('assets/GothamMedium.otf') format('opentype');
   font-weight: 350;
   font-style: normal;
 }
@@ -104,8 +104,11 @@ button:hover {
   color: #293745;
   font-family: 'Gotham Medium';
   font-size: 14px;
-  text-transform: uppercase;
   text-indent: 15px;
+}
+
+.input::placeholder {
+  text-transform: uppercase;
 }
 
 input:focus {

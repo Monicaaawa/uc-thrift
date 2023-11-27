@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static('uploads'));
 
-connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://jayeNay:XFxVqHWr410MeMMr@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
@@ -230,7 +230,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-    
+
 // Create new user 
 app.post('/register', async (req, res) => {
     try {
@@ -244,7 +244,6 @@ app.post('/register', async (req, res) => {
         const user = new User({
             ...req.body,
             password: hashedPassword,
-            confirmedPassword: hashedPassword
         });
 
         await user.save();
@@ -283,8 +282,6 @@ app.put('/users/edit/:_id', async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         user.password = hashedPassword;
-        const hashedConfirmedPassword = await bcrypt.hash(req.body.confirmedPassword, saltRounds);
-        user.confirmedPassword = hashedConfirmedPassword;
         user.username = req.body.username;
 
         await user.save();
