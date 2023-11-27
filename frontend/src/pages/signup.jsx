@@ -55,7 +55,7 @@ function SignUp() {
 
     const isValidEmailDomain = (email) => {
         const domain = email.split('@')[1];
-        return validEmailDomains.some(validDomain => domain.endsWith(`.${validDomain}`));
+        return validEmailDomains.some(validDomain => domain.endsWith(`${validDomain}`));
     };
 
     const getCampus = (email) => {
@@ -74,7 +74,7 @@ function SignUp() {
         };
     
         for (const key in campusMap) {
-            if (domain.endsWith(`.${key}`)) {
+            if (domain.endsWith(`${key}`)) {
                 return campusMap[key];
             }
         }
@@ -127,8 +127,8 @@ function SignUp() {
                     className="input"
                     onChange={(e) => setConfirm(e.target.value)}
                 />
-                {error && <p style={{ color: 'red', top: '505px', position: 'absolute', width: 450 }}>{error}</p>}
-                <button style={{marginTop: 35 + 'px'}} type="submit">
+                {error && <p className = "error" style={{ top: '525px' }}>{error}</p>}
+                <button style={{marginTop: 40 + 'px'}} type="submit">
                     join now
                 </button>
             </form>

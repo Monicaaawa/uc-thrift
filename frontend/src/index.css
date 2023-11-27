@@ -120,6 +120,13 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
+.error {
+  color: red;
+  margin-top: -10px;
+  position: absolute;
+  width: 450px;
+}
+
 .page-center {
   display: flex;
   flex-direction: column;
