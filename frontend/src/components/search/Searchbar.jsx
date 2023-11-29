@@ -3,17 +3,15 @@ import axios from 'axios';
 import './Searchbar.css'
 
 const Searchbar = () => {
-    const [searchItems, setSearchItems] = useState("");
     const [filteredItems, setFilteredItems] = useState([]);
 
     const handleChange = async (e) => {
         const target = e.target.value.toLowerCase();
-        setSearchItems(target);
 
         try {
             const response = await axios.get(`http://localhost:8080/items?search=${target}`);
             const items = response.data;
-            setFilteredItems(items)
+            setFilteredItems(items);
         } catch (error) {
             console.log("Error fetching items: ", error); 
         }
@@ -27,7 +25,6 @@ const Searchbar = () => {
                 type="text"
                 placeholder="Search here"
                 onChange={handleChange}
-                value={searchItems} 
                 />
                 <img className="search-icon" src="../../../src/assets/searchbarIcon.svg" alt="search icon" />
             </div>
