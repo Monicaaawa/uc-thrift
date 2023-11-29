@@ -222,21 +222,21 @@ app.post('/login', async (req, res) => {
         } 
         else 
         {
-            res.status(400).json({ error: 'Invalid email or password.' });
+            return res.status(400).json({ error: 'Invalid email or password' });
         }
     } 
     catch (err) 
     {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-    
+
 // Create new user 
 app.post('/register', async (req, res) => {
     try {
         const dupUser = await User.findOne({ email: req.body.email });
         if (dupUser) {
-            return res.status(400).json({ error: 'Email address is already registered.' });
+            return res.status(400).json({ error: 'Email address is already registered' });
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -244,7 +244,6 @@ app.post('/register', async (req, res) => {
         const user = new User({
             ...req.body,
             password: hashedPassword,
-            confirmedPassword: hashedPassword
         });
 
         await user.save();
@@ -252,7 +251,7 @@ app.post('/register', async (req, res) => {
     } 
     catch (err) 
     {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -283,8 +282,6 @@ app.put('/users/edit/:_id', async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         user.password = hashedPassword;
-        const hashedConfirmedPassword = await bcrypt.hash(req.body.confirmedPassword, saltRounds);
-        user.confirmedPassword = hashedConfirmedPassword;
         user.username = req.body.username;
 
         await user.save();
