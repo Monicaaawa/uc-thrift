@@ -310,6 +310,22 @@ app.get('/users/posted-items/:_id', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+  
+// Access all bought items of a user
+app.get('/users/bought-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const boughtItems = user.boughtItems;
+  
+  res.json(boughtItems);
+});
+
+// Access all sold items of a user
+app.get('/users/:i_id/sold-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const soldItems = user.soldItems;
+  
+  res.json(soldItems);
+});
 
 // Add profile photo
 app.post('/users/upload-profile-picture', upload.single('image'), async (req, res) => {
