@@ -40,15 +40,15 @@ body {
 }
 
 .nav-elements ul a {
-    font-size: 16px;
-    font-weight: 400;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
     color: #293745;
     text-decoration: none;
 }
 
 .nav-elements ul a.active {
-    color: #73A1D1;
-    font-weight: 500;
+    color: #395c7b;
     position: relative;
 }
 
