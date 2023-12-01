@@ -6,10 +6,12 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 
 const ProfilePage = () => {
- const userId = '65697b2b061ec7cf74599423'; //Josie Bruin
+ const userId = '6569a3781f6fe40a242be713'; //Josie Bruin
  const [userData, setUserData] = useState(userId);
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
+ const [soldRatings, setSoldRatings] = useState([]);
+ const [boughtRatings, setBoughtRatings] = useState([]);
 
  const URL = "http://localhost:8080"
 
@@ -17,7 +19,17 @@ const ProfilePage = () => {
    try {
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
-   const { boughtItems, soldItems } = response.data;
+
+   const { boughtRatings, soldRatings, boughtItems, soldItems } = response.data;
+
+    // Update ratings for the user
+    if (Array.isArray(boughtRatings)) {
+        setBoughtRatings(boughtRatings);
+      }
+  
+    if (Array.isArray(soldRatings)) {
+        setSoldRatings(soldRatings);
+      }
 
    // Fetch sold items details
    const fetchedSoldItems = await Promise.all(
@@ -48,6 +60,18 @@ const ProfilePage = () => {
    getUser();
  }, []);
 
+ // calculate user rating
+const calculateRating = (soldRatings, boughtRatings) => {
+  const allRatings = [...soldRatings, ...boughtRatings];
+
+  // calculate average rating with equal weight given to sold and bought ratings
+  const sum = allRatings.reduce((total, rating) => total + rating, 0);
+  const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
+
+  const roundedRating = Number(averageRating.toFixed(1)); 
+
+  return roundedRating;
+ }
 
  //sample user - use temporarily for reviews section
  const user = {
@@ -98,7 +122,7 @@ const ProfilePage = () => {
   <div className="profile-container">
      <div className="profile-details">
        <div className="profile-name">
-         <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({userData.rating}★)</span>}</h2>
+         <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
        </div>
 
        <div className="profile-detail-others">
