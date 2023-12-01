@@ -50,14 +50,40 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
     
 // ITEMS ENDPOINTS
 
-// Get all items
+// // Get all items
+// app.get('/items', async (req, res) => {
+//     try {
+//         const items = await Item.find();
+//         res.json(items);
+//     } catch (error) {
+//         console.error('Error fetching items:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+// Get paginated items
 app.get('/items', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 6;
+    const skip = (page - 1) * perPage;
+  
     try {
-        const items = await Item.find();
-        res.json(items);
+      const items = await Item.find().skip(skip).limit(perPage);
+      res.json(items);
     } catch (error) {
-        console.error('Error fetching items:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching paginated items:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get number of items
+app.get('/items/count', async (req, res) => {
+    try {
+      const count = await Item.countDocuments();
+      res.json(count);
+    } catch (error) {
+      console.error('Error fetching item count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -309,6 +335,22 @@ app.get('/users/posted-items/:_id', async (req, res) => {
         console.error('Error fetching posted items:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+  
+// Access all bought items of a user
+app.get('/users/bought-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const boughtItems = user.boughtItems;
+  
+  res.json(boughtItems);
+});
+
+// Access all sold items of a user
+app.get('/users/:i_id/sold-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const soldItems = user.soldItems;
+  
+  res.json(soldItems);
 });
 
 // Add profile photo
