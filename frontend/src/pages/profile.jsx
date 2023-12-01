@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 
 const ProfilePage = () => {
- const userId = '65684f18a6deda4a8a7a03a1'; //Josie Bruin
+ const userId = '65697b2b061ec7cf74599423'; //Josie Bruin
  const [userData, setUserData] = useState(userId);
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
@@ -102,15 +102,16 @@ const ProfilePage = () => {
        </div>
 
        <div className="profile-detail-others">
-         <p> {userData.campus}</p>
-         <p> {userData.email}</p>
-         <p> phone number </p>
-         <p> city, state </p>
+         <p className="profile-detail-text"> {userData.campus}</p>
+         <br></br>
+         <p className="profile-detail-text"> {userData.email}</p>
+         <p className="profile-detail-text">  phone number </p>
+         <p className="profile-detail-text"> city, state </p>
        </div>
      </div>
 
 <div className="sold-items">
-<h3>Sold Items ({soldItems.length})</h3>
+<h3 className="small-header">Sold Items ({soldItems.length})</h3>
  {soldItems.length === 0 ? (
    <p className="no-items-message">No items to show.</p>
  ) : (
@@ -130,7 +131,7 @@ const ProfilePage = () => {
 </div>
 
 <div className="bought-items">
- <h3>Bought Items ({boughtItems.length})</h3>
+ <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
  {boughtItems.length === 0 ? (
    <p className="no-items-message">No items to show.</p>
  ) : (
@@ -150,7 +151,7 @@ const ProfilePage = () => {
 </div>
 
 <div className="ratings-container">
-       <h3>Ratings ({user.numOfRatings})</h3>
+       <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
          <p className="no-items-message">No ratings to show.</p>
        ) : (    
