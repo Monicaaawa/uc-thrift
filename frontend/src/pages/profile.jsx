@@ -4,16 +4,10 @@ import Navbar from "../components/navigation/Navbar";
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const ProfilePage = () => {
-
-  const location = useLocation();
-  const userIdTest = location.state.userId;
-
-  console.log(userIdTest);
-//  const userId = '6569a3781f6fe40a242be713'; //Josie Bruin
- const [userData, setUserData] = useState(userIdTest);
+ const userId = sessionStorage.getItem('userId');
+ const [userData, setUserData] = useState(userId); 
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
@@ -44,9 +38,7 @@ const ProfilePage = () => {
        return itemResponse.data;
      })
    );
-
    setSoldItems(fetchedSoldItems);
-
     // Fetch bought items details
     const fetchedBoughtItems = await Promise.all(
       boughtItems.map(async (itemId) => {
@@ -54,7 +46,6 @@ const ProfilePage = () => {
         return itemResponse.data;
       })
     );
-  
     setBoughtItems(fetchedBoughtItems);
    }
    catch (error) {
@@ -63,7 +54,7 @@ const ProfilePage = () => {
 };
 
  useEffect(() => {
-  getUser(userIdTest);
+  getUser(userId);
  }, []);
 
  // calculate user rating
@@ -73,9 +64,7 @@ const calculateRating = (soldRatings, boughtRatings) => {
   // calculate average rating with equal weight given to sold and bought ratings
   const sum = allRatings.reduce((total, rating) => total + rating, 0);
   const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
-
   const roundedRating = Number(averageRating.toFixed(1)); 
-
   return roundedRating;
  }
 
@@ -118,13 +107,11 @@ const calculateRating = (soldRatings, boughtRatings) => {
    ]
  }
 
-
  return (
   <div className="page-container">
   <div className="sticky-header">
     <Navbar />
   </div>
-
   <div className="profile-container">
      <div className="profile-details">
        <div className="profile-name">

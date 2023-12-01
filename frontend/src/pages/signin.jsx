@@ -15,7 +15,9 @@ function SignIn() {
             console.log(result)
             if(result.data.message === "Success")
             {
-                navigate('/profile', { state: { userId: result.data.userObj } });
+                const userId = result.data.userObj; 
+                sessionStorage.setItem('userId', userId);
+                navigate('/home');
             }
             else
             {
