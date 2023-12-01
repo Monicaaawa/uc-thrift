@@ -29,7 +29,7 @@ const User = mongoose.model("User", new mongoose.Schema({
         type: Number,
         default: 5
     },
-    postedItemIds: {
+    postedItems: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Item'
@@ -37,18 +37,18 @@ const User = mongoose.model("User", new mongoose.Schema({
         default: []
     },
     soldItems: {
-      type: [{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Item'
-      }],
-      default: []
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Item'
+        }],
+        default: []
     },
     boughtItems: {
-      type: [{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Item'
-      }],
-      default: []
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Item'
+        }],
+        default: []
     }
 }));
 
