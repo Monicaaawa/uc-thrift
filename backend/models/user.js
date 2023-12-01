@@ -17,7 +17,7 @@ const User = mongoose.model("User", new mongoose.Schema({
         type: String,
         required: true
     },
-    confirmedPassword: {
+    campus: {
         type: String,
         required: true
     },
@@ -53,3 +53,4 @@ const User = mongoose.model("User", new mongoose.Schema({
 }));
 
 module.exports = User;
+

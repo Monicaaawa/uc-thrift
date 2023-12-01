@@ -79,49 +79,126 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
     
 // ITEMS ENDPOINTS
 
-// Get items
-app.get('/items', async (req, res) => {
-    const item = await Item.find();
+// // Get all items
+// app.get('/items', async (req, res) => {
+//     try {
+//         const items = await Item.find();
+//         res.json(items);
+//     } catch (error) {
+//         console.error('Error fetching items:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
-    res.json(item);
+// Get paginated items
+app.get('/items', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 6;
+    const skip = (page - 1) * perPage;
+  
+    try {
+      const items = await Item.find().skip(skip).limit(perPage);
+      res.json(items);
+    } catch (error) {
+      console.error('Error fetching paginated items:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get number of items
+app.get('/items/count', async (req, res) => {
+    try {
+      const count = await Item.countDocuments();
+      res.json(count);
+    } catch (error) {
+      console.error('Error fetching item count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get item by id
+app.get('/items/:_id', async (req, res) => {
+    try {
+        const item = await Item.findById(req.params._id);
+
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error fetching item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Create new item
-app.post('/items/new', (req, res) => {
-    const currentUser = req.user;
+app.post('/items/new', async (req, res) => {
+    // const currentUser = req.user;
 
     const item = new Item({
         title: req.body.title,
-        seller: currentUser._id,
+        // sellerId: currentUser._id,
+        sellerId: req.body.sellerId,
         price: req.body.price,
         condition: req.body.condition,
         description: req.body.description,
         timestamp: Date.now(),
     });
 
-    item.save();
+    try {
+        await item.save();
 
-    res.json(item);
+        // Update the seller's postedItemIds array with the new item's _id
+        const seller = await User.findById(req.body.sellerId);
+        if (seller) {
+            seller.postedItemIds.push(item._id);
+            await seller.save();
+        }
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error creating a new item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
     
 // Edit item details
 app.put('/items/edit/:_id', async (req, res) => {
-    const item = await Item.findById(req.params._id);
+    try {
+        const item = await Item.findById(req.params._id);
 
-    item.price = req.body.price,
-    item.condition = req.body.condition,
-    item.description = req.body.description,
+        if (!item) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
 
-    item.save();
+        item.price = req.body.price;
+        item.condition = req.body.condition;
+        item.description = req.body.description;
 
-    res.json(item);
+        await item.save();
+
+        res.json(item);
+    } catch (error) {
+        console.error('Error editing item details:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
     
 // Delete item
 app.delete('/items/delete/:_id', async (req, res) => {
-    const result = await Item.findByIdAndDelete(req.params._id);
+    try {
+        const result = await Item.findByIdAndDelete(req.params._id);
 
-    res.json(result);
+        if (!result) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error deleting item:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Add item images
@@ -202,9 +279,29 @@ app.post('/items/sold/:itemId', async (req, res) => {
 const saltRounds = 10;
 // Get all users
 app.get('/users', async (req, res) => {
-    const users = await User.find();
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
-    res.json(users);
+// Get user by id
+app.get('/users/:_id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params._id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Log in to user account
@@ -219,21 +316,21 @@ app.post('/login', async (req, res) => {
         } 
         else 
         {
-            res.status(400).json({ error: 'Invalid email or password.' });
+            return res.status(400).json({ error: 'Invalid email or password' });
         }
     } 
     catch (err) 
     {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-    
+
 // Create new user 
 app.post('/register', async (req, res) => {
     try {
         const dupUser = await User.findOne({ email: req.body.email });
         if (dupUser) {
-            return res.status(400).json({ error: 'Email address is already registered.' });
+            return res.status(400).json({ error: 'Email address is already registered' });
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -241,7 +338,6 @@ app.post('/register', async (req, res) => {
         const user = new User({
             ...req.body,
             password: hashedPassword,
-            confirmedPassword: hashedPassword
         });
 
         await user.save();
@@ -249,46 +345,80 @@ app.post('/register', async (req, res) => {
     } 
     catch (err) 
     {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
 // Delete user
 app.delete('/users/delete/:_id', async (req, res) => {
-    const result = await User.findByIdAndDelete(req.params._id);
+    try {
+        const result = await User.findByIdAndDelete(req.params._id);
 
-    res.json(result);
+        if (!result) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Edit user information
 app.put('/users/edit/:_id', async (req, res) => {
     try {
         const user = await User.findById(req.params._id);
-        
+
         if (!user) 
         {
             return res.status(404).json({ error: 'User not found' });
         }
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         user.password = hashedPassword;
-        const hashedConfirmedPassword = await bcrypt.hash(req.body.confirmedPassword, saltRounds);
-        user.confirmedPassword = hashedConfirmedPassword;
         user.username = req.body.username;
 
-        user.save();
-        res.json({ message: 'User information updated successfully' });
+        await user.save();
+         res.json(user);
     }
-    catch (err)
+    catch (error)
     {
-        res.status(500).json({ error: 'Internal server error'});
+        console.error('Error editing user information:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-app.get('/users/posted-items', async (req, res) => {
-    const user = await User.findById(req.params._id);
-    const postedItems = user.postedItems;
+// Access all posted items of a user
+app.get('/users/posted-items/:_id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params._id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-    res.json(postedItems);
+        const postedItems = await Item.find({ _id: { $in: user.postedItemIds } });
+
+        res.json(postedItems);
+    } catch (error) {
+        console.error('Error fetching posted items:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+  
+// Access all bought items of a user
+app.get('/users/bought-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const boughtItems = user.boughtItems;
+  
+  res.json(boughtItems);
+});
+
+// Access all sold items of a user
+app.get('/users/:i_id/sold-items', async (req, res) => {
+  const user = await User.findById(req.params._id);
+  const soldItems = user.soldItems;
+  
+  res.json(soldItems);
 });
 
 // Add profile photo
