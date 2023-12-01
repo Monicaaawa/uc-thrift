@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ItemDetails.css';
-import Navbar from './navigation/Navbar';
+import Header from './Header';
 
 const URL = 'http://localhost:8080';
 
 export default function ItemDetails({ item }) {
   const [seller, setSeller] = useState(null);
-  const [previousPage, setPreviousPage] = useState('');
 
   async function fetchSellerInfo() {
     try {
@@ -60,7 +59,7 @@ export default function ItemDetails({ item }) {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className = "item-details">
         {/* {item.image && <img src={item.image} alt={item.title} />} */}
         <img src = "https://via.placeholder.com/400x400" alt = "placeholder" />

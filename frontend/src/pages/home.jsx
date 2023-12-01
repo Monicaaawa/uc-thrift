@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from "../components/navigation/Navbar";
-import Searchbar from "../components/navigation/Searchbar";
+import Header from '../components/Header';
 import ItemPreview from "../components/ItemPreview";
 import axios from 'axios';
 import './home.css';
@@ -53,13 +52,12 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
-      <Searchbar />
-      <p>{count}</p>
+      <Header />
+      {/* <p>{count}</p>
       <div className='item-container'>
         {items && displayItems(items)}
       </div>
-      <Pagination currentPage={currentPage} totalItems={count} onPageChange={handlePageChange} />
+      <Pagination currentPage={currentPage} totalItems={count} onPageChange={handlePageChange} /> */}
     </>
   );
 } 

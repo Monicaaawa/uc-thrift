@@ -31,7 +31,7 @@ function SignIn() {
     return (
         <div className="page-center">
             <img style={{width: 180}} src="../../../src/assets/ucthrift.svg" alt="logo" />
-            <h2> sign in </h2>
+            <h2 style = {{ marginTop: 20, marginBottom: 20}}> sign in </h2>
             <form className="input-list" onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -49,7 +49,7 @@ function SignIn() {
                     className="input"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                {error && <p className = "error" style={{ top: '420px' }}>{error}</p>}
+                {error && <p className = "error" style={{ top: '425px' }}>{error}</p>}
                 <button style={{marginTop: 40 + 'px'}} type="submit">
                     log in
                 </button>
