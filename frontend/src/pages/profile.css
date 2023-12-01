@@ -1,54 +1,104 @@
-/* Container for entire profile page */
-.profile-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    margin-left: 100px
-  }
-
-  .profile-details {
-    margin-top: 200px;
-  }
-  
-  .profile-detail-others {
-  line-height: 0.5;
-  font-family: 'Gotham';
-  margin-bottom: 50px;
-}
-
-.sold-items-list, .bought-items-list {
-  list-style: none;
-  display: flex;
-  margin-bottom: 50px;
-}
-
-.sold-items-list li, .bought-items-list li {
-  margin-right: 10px;
-}
-
-.sold-items-list img, .bought-items-list img {
-  width: 250px; 
-  height: 250px; 
-  object-fit: cover; 
-  object-position: center; 
-}
-
-.reviews-list {
-  list-style: none;
-}
-
-.reviews-list li {
-  margin-bottom: 50px;
-}
-
-.reviewer-name {
-  font-size: 18px;
-}
-
-.reviewer-text {
-  font-size: 14px;
-}
-
- .review-name-container {
-  line-height: 0.5px;
+body {
+  margin: 0;
+  padding: 0;
  }
+ 
+ * {
+  box-sizing: border-box;
+ }
+ 
+ .profile-container {
+  width: 100vw;
+  margin: 0 auto;
+  padding: 100px;
+  white-space: nowrap;
+ }
+ 
+ .profile-name-text {
+  font-size: 36px;
+  line-height: 43.2px;
+ }
+ 
+ .profile-details {
+  margin-top: 200px;
+ }
+ 
+ .profile-detail-others {
+ line-height: 0.5;
+ font-size: 18px;
+ margin-bottom: 50px;
+ }
+ 
+ .sold-items-list, .bought-items-list {
+ list-style: none;
+ display: inline-flex;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ .sold-items-container {
+  overflow-x: auto;
+  white-space: nowrap;
+ }
+ 
+ .sold-items-list li, .bought-items-list li {
+ margin-right: 10px;
+ text-align: center;
+ }
+ 
+ .sold-items-list li div {
+  margin-bottom: 5px;
+ }
+ 
+ .sold-items-list img, .bought-items-list img {
+ width: 250px;
+ height: 250px;
+ object-fit: cover;
+ object-position: center;
+ }
+ 
+ .reviews-list {
+ list-style: none;
+ }
+ 
+ .reviews-list li {
+ margin-bottom: 50px;
+ }
+ 
+ .reviewer-name {
+ font-size: 18px;
+ text-align: right;
+ padding: 0;
+ margin: 0;
+ }
+ 
+ .reviewer-text {
+ font-size: 14px;
+ }
+ 
+ .bought-from-text {
+  font-size: 14px;
+  line-height: 16.8px;
+  margin: 0;
+ }
+ 
+ .review-name-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+ }
+ 
+ .star-container {
+  text-align: right;
+ }
+ 
+ .reviewer-name-align-left {
+  text-align: left;
+ }
+ 
+ .review-comment{
+  padding: 0;
+  margin-top: 20;
+ }
+ 

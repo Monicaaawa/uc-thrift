@@ -5,8 +5,9 @@ const Item = mongoose.model("Item", new mongoose.Schema({
         type: String,
         required: true
     },
-    seller: {
-        type: String,
+    sellerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     price: {
@@ -21,9 +22,14 @@ const Item = mongoose.model("Item", new mongoose.Schema({
         type: String,
         default: ""
     },
+    images: {
+        type: [String],
+        default: []
+    },
     timestamp: {
         type: Number
     }
 }));
+
 
 module.exports = Item;

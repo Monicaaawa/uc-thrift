@@ -15,22 +15,22 @@ function SignIn() {
             console.log(result)
             if(result.data === "Success")
             {
-                navigate('/home')
+                navigate('/home');
             }
             else
             {
-                setError(result.data.error || 'An error occurred.');
+                setError(result.data.error);
             }
         })
         .catch(err => {
             console.log(err)
-            setError('An error occurred.');
+            setError(err.response.data.error || 'An error occurred.');
         })
     }
 
     return (
         <div className="page-center">
-            <img style={{width: 180}} src="../../../src/assets/uc thrift 2.svg" alt="logo" />
+            <img style={{width: 180}} src="../../../src/assets/ucthrift.svg" alt="logo" />
             <h2> sign in </h2>
             <form className="input-list" onSubmit={handleSubmit}>
                 <input
@@ -49,8 +49,8 @@ function SignIn() {
                     className="input"
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                {error && <p style={{ color: 'red', top: '400px', position: 'absolute' }}>{error}</p>}
-                <button style={{marginTop: 35 + 'px'}} type="submit">
+                {error && <p className = "error" style={{ top: '420px' }}>{error}</p>}
+                <button style={{marginTop: 40 + 'px'}} type="submit">
                     log in
                 </button>
             </form>

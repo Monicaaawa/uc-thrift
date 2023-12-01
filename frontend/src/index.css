@@ -33,14 +33,14 @@ body {
 
 @font-face {
   font-family: 'Gotham Bold'; 
-  src: url('assets/Gotham\ Bold.otf') format('opentype');
+  src: url('assets/GothamBold.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Gotham Medium'; 
-  src: url('assets/Gotham\ Medium.otf') format('opentype');
+  src: url('assets/GothamMedium.otf') format('opentype');
   font-weight: 350;
   font-style: normal;
 }
@@ -50,6 +50,7 @@ h1 {
   font-size: 36px;
   text-transform: uppercase;
   color: #293745;
+  margin: 0;
 }
 
 h2 {
@@ -57,6 +58,7 @@ h2 {
   font-size: 21px;
   text-transform: uppercase;
   color: #293745;
+  margin: 0;
 }
 
 h3 {
@@ -68,8 +70,9 @@ h3 {
 
 p {
   font-family: 'Gotham Medium';
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
+  margin: 0;
 }
 
 button {
@@ -104,8 +107,11 @@ button:hover {
   color: #293745;
   font-family: 'Gotham Medium';
   font-size: 14px;
-  text-transform: uppercase;
   text-indent: 15px;
+}
+
+.input::placeholder {
+  text-transform: uppercase;
 }
 
 input:focus {
@@ -115,6 +121,13 @@ input:focus {
 input:-webkit-autofill {
   background-color: transparent;
   -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.error {
+  color: red;
+  margin-top: -10px;
+  position: absolute;
+  width: 450px;
 }
 
 .page-center {

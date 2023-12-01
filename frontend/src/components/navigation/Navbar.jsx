@@ -6,12 +6,12 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="container">
                 <div>
-                    <img style={{width: 180 + 'px'}} src="../../../src/assets/uc thrift 2.svg" alt="logo" />
+                    <img style={{width: 180 + 'px'}} src="../../../src/assets/ucthrift.svg" alt="logo" />
                 </div>
                 <div className="nav-elements">
                     <ul>
                         <li>
-                            <NavLink to="/home">Home</NavLink>
+                            <NavLink to="/">Home</NavLink>
                         </li>
                         <li>
                             <NavLink to="/textbooks">Textbooks</NavLink>

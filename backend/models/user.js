@@ -17,9 +17,13 @@ const User = mongoose.model("User", new mongoose.Schema({
         type: String,
         required: true
     },
-    confirmedPassword: {
+    campus: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
+        required: false
     },
     rating: {
         type: Number,
@@ -31,7 +35,22 @@ const User = mongoose.model("User", new mongoose.Schema({
             ref: 'Item'
         }],
         default: []
+    },
+    soldItems: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Item'
+        }],
+        default: []
+    },
+    boughtItems: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Item'
+        }],
+        default: []
     }
 }));
 
 module.exports = User;
+
