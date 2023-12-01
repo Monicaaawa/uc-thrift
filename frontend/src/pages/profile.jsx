@@ -109,65 +109,67 @@ const calculateRating = (soldRatings, boughtRatings) => {
 
  return (
   <div className="page-container">
-  <div className="sticky-header">
+      <div className="sticky-header">
     <Navbar />
   </div>
-  <div className="profile-container">
-     <div className="profile-details">
-       <div className="profile-name">
-         <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
-       </div>
+    {userId ? (
+      // If userId exists, render profile details
+      <div className="profile-container">
+      <div className="profile-details">
+        <div className="profile-name">
+          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
+        </div>
+ 
+        <div className="profile-detail-others">
+          <p className="profile-detail-text"> {userData.campus}</p>
+          <br></br>
+          <p className="profile-detail-text"> {userData.email}</p>
+          <p className="profile-detail-text">  phone number </p>
+          <p className="profile-detail-text"> city, state </p>
+        </div>
+      </div>
 
-       <div className="profile-detail-others">
-         <p className="profile-detail-text"> {userData.campus}</p>
-         <br></br>
-         <p className="profile-detail-text"> {userData.email}</p>
-         <p className="profile-detail-text">  phone number </p>
-         <p className="profile-detail-text"> city, state </p>
-       </div>
-     </div>
+      <div className="sold-items">
+      <h3 className="small-header">Sold Items ({soldItems.length})</h3>
+      {soldItems.length === 0 ? (
+        <p className="no-items-message">No items to show.</p>
+      ) : (
+      <div className="sold-items-container">
+        <ul className="sold-items-list">
+          {soldItems.map(item => (
+            <li key={item.id}>
+              <div>
+                {<img src={`./../../images/image1.jpg`} />}
+              </div>
+              <p>{item.title}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      )}
+    </div>
 
-<div className="sold-items">
-<h3 className="small-header">Sold Items ({soldItems.length})</h3>
- {soldItems.length === 0 ? (
-   <p className="no-items-message">No items to show.</p>
- ) : (
-   <div className="sold-items-container">
-     <ul className="sold-items-list">
-       {soldItems.map(item => (
-         <li key={item.id}>
-           <div>
-             {<img src={`./../../images/image1.jpg`} />}
-           </div>
-           <p>{item.title}</p>
-         </li>
-       ))}
-     </ul>
-   </div>
- )}
-</div>
+    <div className="bought-items">
+    <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
+    {boughtItems.length === 0 ? (
+      <p className="no-items-message">No items to show.</p>
+    ) : (
+      <div className="bought-items-container">
+        <ul className="bought-items-list">
+          {boughtItems.map(item => (
+            <li key={item.id}>
+              <div>
+                {<img src={'./../../images/image1'} />}
+                </div>
+              <p>{item.title}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    </div>
 
-<div className="bought-items">
- <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
- {boughtItems.length === 0 ? (
-   <p className="no-items-message">No items to show.</p>
- ) : (
-   <div className="bought-items-container">
-     <ul className="bought-items-list">
-       {boughtItems.map(item => (
-         <li key={item.id}>
-           <div>
-             {<img src={'./../../images/image1'} />}
-            </div>
-           <p>{item.title}</p>
-         </li>
-       ))}
-     </ul>
-   </div>
- )}
-</div>
-
-<div className="ratings-container">
+    <div className="ratings-container">
        <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
          <p className="no-items-message">No ratings to show.</p>
@@ -192,9 +194,16 @@ const calculateRating = (soldRatings, boughtRatings) => {
          </ul>      
        )}
      </div>
-   </div>
-   </div>
- );
+    </div>
+
+    ) : (
+      // if userId is null or undefined
+      <div>
+        <h1>Not signed in. Please sign in to see profile info.</h1>
+      </div>
+    )}
+  </div>
+  );
 };
 
 export default ProfilePage;
