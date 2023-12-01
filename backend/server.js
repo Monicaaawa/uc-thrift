@@ -59,7 +59,8 @@ function sendEmail(to, subject, html) {
     });
 }
 
-connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+// connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://aileen:11111@ucthrift-dev.xpujbsq.mongodb.net/?retryWrites=true&w=majority"
 
 // INIT CONNECTION
 mongoose
@@ -312,7 +313,8 @@ app.post('/login', async (req, res) => {
         const user = await User.findOne({ email: email });
         if (user && await bcrypt.compare(password, user.password)) 
         {
-            res.json('Success');
+            // res.json('Success');         
+              res.json({ userObj: user._id, message: 'Success' });
         } 
         else 
         {
@@ -454,3 +456,19 @@ app.delete('/users/delete-profile-picture/:userId', async (req, res) => {
 
     res.send('Profile picture deleted successfully');
 });
+
+const newUser = new User({
+    firstName: "newuser",
+    lastName: "lastname",
+    email: "josiebruin@gmail.com",
+    password: "hello123",
+    campus: "UCLA",
+    rating: 5,
+    postedItemIds:['6553fff0954c988b17b3742a', '656046e2bc528e4ab7b79916', '65604858bc528e4ab7b79917'],
+    soldItems: ['6553fff0954c988b17b3742a', '656046e2bc528e4ab7b79916'],
+    boughtItems: [],
+    soldRatings: [3, 4, 3, 5],
+    boughtRatings: [1, 2]
+})
+
+newUser.save();

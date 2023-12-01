@@ -13,9 +13,9 @@ function SignIn() {
         axios.post('http://localhost:8080/login', {email, password})
         .then(result => {
             console.log(result)
-            if(result.data === "Success")
+            if(result.data.message === "Success")
             {
-                navigate('/home');
+                navigate('/profile', { state: { userId: result.data.userObj } });
             }
             else
             {

@@ -4,10 +4,16 @@ import Navbar from "../components/navigation/Navbar";
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const ProfilePage = () => {
- const userId = '6569a3781f6fe40a242be713'; //Josie Bruin
- const [userData, setUserData] = useState(userId);
+
+  const location = useLocation();
+  const userIdTest = location.state.userId;
+
+  console.log(userIdTest);
+//  const userId = '6569a3781f6fe40a242be713'; //Josie Bruin
+ const [userData, setUserData] = useState(userIdTest);
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
@@ -15,7 +21,7 @@ const ProfilePage = () => {
 
  const URL = "http://localhost:8080"
 
- const getUser = async () => {
+ const getUser = async (userId) => {
    try {
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
@@ -57,7 +63,7 @@ const ProfilePage = () => {
 };
 
  useEffect(() => {
-   getUser();
+  getUser(userIdTest);
  }, []);
 
  // calculate user rating
