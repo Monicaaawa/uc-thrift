@@ -35,6 +35,7 @@ const DropdownFilter = () => {
             response = await axios.get('http://localhost:8080/users');
             const sellers = response.data;
             const sortedSellers = sellers.sort((a, b) => b.rating - a.rating);
+            console.log("sortedSellers: ", sortedSellers);
   
             const uniqueItemIds = new Set();
             
@@ -42,15 +43,24 @@ const DropdownFilter = () => {
               // Fetch items associated with the sorted sellers
               const itemsResponse = await axios.get(`http://localhost:8080/items?sellerId=${seller.id}`);
               const items = itemsResponse.data;
+              console.log("items; ", items);
   
               // Filter out items already added to the set
               const newItems = items.filter((item) => !uniqueItemIds.has(item.id));
+              console.log("newItems: ", newItems);
   
               // Add new item IDs to the set
               newItems.forEach((item) => uniqueItemIds.add(item.id));
   
               // Return an array of items with the seller rating
-              return newItems.map((item) => ({ ...item, sellerRating: seller.rating }));
+              //return newItems.map((item) => ({ ...item, sellerRating: seller.rating}));
+              console.log("seller.rating: ", seller.rating);
+              return newItems.map((item) => (
+                { 
+                  ...item,
+                  sellerRating: seller.rating 
+                }
+              ));
             });
   
             // Wait for all item fetch promises to resolve and flatten the array
