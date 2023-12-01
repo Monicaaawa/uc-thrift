@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static('uploads'));
 
-connection = "mongodb+srv://monicasyye:2004328@ucthrift-dev.xpujbsq.mongodb.net/"
+connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
