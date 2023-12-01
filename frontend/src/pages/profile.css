@@ -6,6 +6,19 @@ body {
  * {
   box-sizing: border-box;
  }
+
+ .sticky-header {
+  position: fixed;
+  top: 0;
+  height: 15%;
+  width: 100%;
+  background-color: white; 
+  z-index: 1000; 
+}
+
+.profile-container {
+  padding-top: 100px; 
+}
  
  .profile-container {
   width: 100vw;

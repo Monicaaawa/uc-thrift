@@ -1,12 +1,12 @@
 import React from 'react';
 import './profile.css';
+import Navbar from "../components/navigation/Navbar";
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
 
 const ProfilePage = () => {
- const userId = '6563a79964a01b13172d34ab'; //Josie Bruin
-//  const userId = '6563cef6161e4bbdde7d8c3c'; //Bob Brown
+ const userId = '65684f18a6deda4a8a7a03a1'; //Josie Bruin
  const [userData, setUserData] = useState(userId);
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
@@ -90,13 +90,19 @@ const ProfilePage = () => {
 
 
  return (
-   <div className="profile-container">
+  <div className="page-container">
+  <div className="sticky-header">
+    <Navbar />
+  </div>
+
+  <div className="profile-container">
      <div className="profile-details">
        <div className="profile-name">
          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({userData.rating}★)</span>}</h2>
        </div>
 
        <div className="profile-detail-others">
+         <p> {userData.campus}</p>
          <p> {userData.email}</p>
          <p> phone number </p>
          <p> city, state </p>
@@ -115,7 +121,7 @@ const ProfilePage = () => {
            <div>
              {<img src={`./../../images/image1.jpg`} />}
            </div>
-           <span>{item.title}</span>
+           <p>{item.title}</p>
          </li>
        ))}
      </ul>
@@ -135,7 +141,7 @@ const ProfilePage = () => {
            <div>
              {<img src={'./../../images/image1'} />}
             </div>
-           <span>{item.title}</span>
+           <p>{item.title}</p>
          </li>
        ))}
      </ul>
@@ -168,6 +174,7 @@ const ProfilePage = () => {
          </ul>      
        )}
      </div>
+   </div>
    </div>
  );
 };
