@@ -6,7 +6,7 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="container">
                 <div>
-                    <img style={{width: 180 + 'px'}} src="../../../src/assets/uc thrift 2.svg" alt="logo" />
+                    <img style={{width: 180 + 'px'}} src="../../../src/assets/ucthrift.svg" alt="logo" />
                 </div>
                 <div className="nav-elements">
                     <ul>
