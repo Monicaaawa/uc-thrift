@@ -50,6 +50,7 @@ h1 {
   font-size: 36px;
   text-transform: uppercase;
   color: #293745;
+  margin: 0;
 }
 
 h2 {
@@ -57,6 +58,7 @@ h2 {
   font-size: 21px;
   text-transform: uppercase;
   color: #293745;
+  margin: 0;
 }
 
 h3 {
@@ -68,8 +70,9 @@ h3 {
 
 p {
   font-family: 'Gotham Medium';
-  font-size: 12px;
+  font-size: 14px;
   text-transform: uppercase;
+  margin: 0;
 }
 
 button {
