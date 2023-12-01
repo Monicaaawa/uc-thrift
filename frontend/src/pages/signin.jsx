@@ -30,7 +30,7 @@ function SignIn() {
 
     return (
         <div className="page-center">
-            <img style={{width: 180}} src="../../../src/assets/uc thrift 2.svg" alt="logo" />
+            <img style={{width: 180}} src="../../../src/assets/ucthrift.svg" alt="logo" />
             <h2> sign in </h2>
             <form className="input-list" onSubmit={handleSubmit}>
                 <input

@@ -4,6 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 mongoose.set('strictQuery', false);
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Setup uploading
 const uploadsDir = './uploads';
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
@@ -29,6 +31,33 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use('/uploads', express.static('uploads'));
+
+// Setup mailing
+let transporter = nodemailer.createTransport({
+    service: 'Gmail', // e.g., 'Gmail'
+    auth: {
+        user: '<email address>',
+        pass: '<password>'
+    }
+});
+
+// Function to send mail
+function sendEmail(to, subject, html) {
+    let mailOptions = {
+        from: '<email address>',
+        to: to,
+        subject: subject,
+        html: html
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
 
 connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
@@ -50,14 +79,40 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
     
 // ITEMS ENDPOINTS
 
-// Get all items
+// // Get all items
+// app.get('/items', async (req, res) => {
+//     try {
+//         const items = await Item.find();
+//         res.json(items);
+//     } catch (error) {
+//         console.error('Error fetching items:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+// Get paginated items
 app.get('/items', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 6;
+    const skip = (page - 1) * perPage;
+  
     try {
-        const items = await Item.find();
-        res.json(items);
+      const items = await Item.find().skip(skip).limit(perPage);
+      res.json(items);
     } catch (error) {
-        console.error('Error fetching items:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching paginated items:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get number of items
+app.get('/items/count', async (req, res) => {
+    try {
+      const count = await Item.countDocuments();
+      res.json(count);
+    } catch (error) {
+      console.error('Error fetching item count:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -179,6 +234,45 @@ app.delete('/items/delete-image/:itemId/:imageName', async (req, res) => {
     });
 
     res.send('Image deleted successfully');
+});
+
+// Sold Item Handling
+app.post('/items/sold/:itemId', async (req, res) => {
+    try {
+        const { buyerId } = req.body;
+        const itemId = req.params.itemId;
+
+        const item = await Item.findById(itemId);
+        const seller = await User.findById(item.seller);
+        const buyer = await User.findById(buyerId);
+
+        if (!item || !seller || !buyer) {
+            return res.status(404).json({ error: 'Item or users not found' });
+        }
+
+        seller.soldItems.push(item._id);
+        seller.postedItems.pop(item._id);
+        buyer.boughtItems.push(item._id);
+
+        await seller.save();
+        await buyer.save();
+
+        sendEmail(
+            buyer.email,
+            "Item Purchase Confirmation",
+            `You have purchased an item. <a href="http://<domain>/items/review/${itemId}/buyer">Click here to review the item</a>.`
+        );
+
+        sendEmail(
+            seller.email,
+            "Item Sold Confirmation",
+            `Your item has been sold. <a href="http://<domain>/items/review/${itemId}/seller">Click here to review the buyer</a>.`
+        );
+
+        res.json({ message: 'Item sold, users updated, emails sent' });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
     
 // USER ENDPOINTS

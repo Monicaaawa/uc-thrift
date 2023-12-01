@@ -1,0 +1,32 @@
+.item-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+.pagination-button {
+    padding: 8px 16px;
+    background-color: #293745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-button:disabled {
+    background-color: #ddd;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.pagination-text {
+    font-size: 16px;
+    margin: 0 16px;
+}

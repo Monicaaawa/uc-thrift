@@ -1,5 +1,5 @@
 .search-container {
-    position: absolute;
+    position: fixed;
     display: flex; 
     min-width: 100px;
     width: 90%;
