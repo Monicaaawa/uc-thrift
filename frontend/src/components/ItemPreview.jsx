@@ -33,7 +33,7 @@ export default function ItemPreview({ item }) {
 
   return (
     <div className="item-preview">
-        <Link to={`/item-details/${item._id}`}>
+        <Link to={`/item/${item._id}`}>
             {item.image && <img src={item.image} alt={item.title} />}
             <p>{timeAgo}</p>
             <h2>{item.title}</h2>

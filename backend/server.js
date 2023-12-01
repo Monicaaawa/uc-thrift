@@ -135,7 +135,6 @@ app.get('/items/:_id', async (req, res) => {
 // Create new item
 app.post('/items/new', async (req, res) => {
     // const currentUser = req.user;
-
     const item = new Item({
         title: req.body.title,
         // sellerId: currentUser._id,
@@ -145,14 +144,15 @@ app.post('/items/new', async (req, res) => {
         description: req.body.description,
         timestamp: Date.now(),
     });
+    console.log(item)
 
     try {
         await item.save();
 
-        // Update the seller's postedItemIds array with the new item's _id
+        // Update the seller's postedItems array with the new item's _id
         const seller = await User.findById(req.body.sellerId);
         if (seller) {
-            seller.postedItemIds.push(item._id);
+            seller.postedItems.push(item._id);
             await seller.save();
         }
 
@@ -396,7 +396,7 @@ app.get('/users/posted-items/:_id', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const postedItems = await Item.find({ _id: { $in: user.postedItemIds } });
+        const postedItems = await Item.find({ _id: { $in: user.postedItems } });
 
         res.json(postedItems);
     } catch (error) {
