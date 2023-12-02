@@ -12,7 +12,7 @@ function Header() {
                 <input 
                 className="search"
                 type="text"
-                placeholder="Search for items"
+                placeholder="Search items"
                 // onChange={handleChange}
                 // value={searchItems} 
                 />

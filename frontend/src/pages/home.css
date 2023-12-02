@@ -1,32 +1,141 @@
+.chip {
+    background-color: #293745;
+    color: white;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
+    width: fit-content;
+    padding: 8px 12px;
+    display: inline-block;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rest-container {
+    width: 100%;
+}
+
+.home-container {
+    position: absolute;
+    display: flex;
+    top: 70px;
+    padding: 50px 50px;
+    width: 100vw;
+}
+
+.filter-container {
+    width: 300px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    height: 300px;
+    background-color: grey;
+}
+
 .item-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 0fr));
+    gap: 30px;
+    margin: 30px 0px;
+    justify-content: space-between;
 }
 
 .pagination-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: center;
+    margin-top: 70px;
   }
   
 .pagination-button {
-    padding: 8px 16px;
-    background-color: #293745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+    width: 45px;
+    margin: 0px 20px;
+    /* padding: 8px 16px; */
+    background-color: white;
+    color: #293745;
+    border: solid 2px #293745;
+    /* border-radius: 4px; */
     cursor: pointer;
 }
 
+.pagination-button:hover {
+    transform: none;
+}
+
+.pagination-button.active,
+.pagination-button:hover:not(.active):not(:disabled) {
+    background-color: #293745;
+    color: white;
+}
+
+.next {
+    background-image: url('../assets/next.svg');
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.next:hover:not(:disabled) {
+    background-image: url('../assets/next-white.svg');
+}
+
+.previous {
+    background-image: url('../assets/previous.svg');
+    background-size: 12px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.previous:hover:not(:disabled) {
+    background-image: url('../assets/previous-white.svg');
+}
+
 .pagination-button:disabled {
-    background-color: #ddd;
-    color: #666;
-    cursor: not-allowed;
+    cursor: default;
 }
 
 .pagination-text {
     font-size: 16px;
     margin: 0 16px;
+}
+
+.item-info {
+    color: #293745;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.items-per-page {
+    color: #293745;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-right: 20px;
+}
+
+select {
+    border: 2px solid #293745;
+    padding: 8px;
+}
+
+@media (max-width: 800px) {
+    .home-container {
+        flex-wrap: wrap;
+    }
+
+    .item-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 0fr));
+        gap: 30px;
+        margin: 30px 0px;
+        justify-content: space-between;
+    }
+
+    .filter-container {
+        margin-right: 0px;
+    }
 }
