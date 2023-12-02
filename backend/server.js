@@ -80,12 +80,6 @@ const User = require('./models/user');
 app.listen(8080, () => console.log('Server listening on port 8080: http://localhost:8080'));
     
 // ITEMS ENDPOINTS
-
-// Get items (might need to delete)
-app.get('/items', async (req, res) => {
-    const searchQuery = req.query.search || '';
-    const item = await Item.find({ title: { $regex: new RegExp(searchQuery, 'i') } });
-});
 // // Get all items
 // app.get('/items', async (req, res) => {
 //     try {
