@@ -20,9 +20,15 @@ export default function Home() {
     fetchCount();
   }, [currentPage]);
 
-  async function fetchItems() {
+  async function fetchItems(searchTerm = null) {
     try {
-      const response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      let response;
+
+      if (searchTerm) {
+        response = await axios.get(`${URL}/items?search=${searchTerm}`);
+      } else {
+        response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      }
       setItems(response.data);
     } catch (e) {
       console.error('Error fetching items:', e);
@@ -52,10 +58,14 @@ export default function Home() {
     setCurrentPage(newPage);
   };
 
+  const handleSearch = (searchTerm) => {
+    fetchItems(searchTerm);
+  };
+
   return (
     <>
       <Navbar />
-      <Searchbar />
+      <Searchbar onSearch={handleSearch}/>
       <DropdownFilter />
       <p>{count}</p>
       <div className='item-container'>
