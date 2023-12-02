@@ -5,18 +5,31 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
 
-const ProfilePage = () => {
- const userId = sessionStorage.getItem('userId');
- const [userData, setUserData] = useState(userId); 
+const ProfilePage = ( { userId: propUserId } ) => {
+
+let userId;
+
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
  const [boughtRatings, setBoughtRatings] = useState([]);
 
+ if (propUserId) {
+  userId = propUserId;
+} else { 
+  userId = sessionStorage.getItem('userId')
+}
+
+const [userData, setUserData] = useState(userId); 
+
+
  const URL = "http://localhost:8080"
 
  const getUser = async (userId) => {
    try {
+    if (userData === 'null') {
+      return;
+    }
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
 
