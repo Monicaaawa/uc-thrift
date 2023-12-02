@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DropdownFilter.css';
+import ItemPreview from '../ItemPreview';
 
-const DropdownFilter = () => {
+const DropdownFilter = ({ onFilter }) => {
   const [filter, setFilter] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -71,35 +72,35 @@ const DropdownFilter = () => {
             const sortedItemsWithRating = itemsWithSellerRating.sort((a, b) => b.sellerRating - a.sellerRating);
             setFilteredItems(sortedItemsWithRating);
         }
+        onFilter(null);
       } catch (error) {
         console.log('Error fetching and sorting items: ', error);
       }
     };
-
     fetchData();
   }, [filter]);
 
   return (
-    <div>
-      <label htmlFor="filter">Sort By: </label>
-      <select name="filter" value={filter} onChange={handleChangeFilter}>
-        <option value="">-- Please Select --</option>
-        <option value="name">Name</option>
-        <option value="date">Most recent</option>
-        <option value="price-low">Price: low to high</option>
-        <option value="price-high">Price: high to low</option>
-        <option value="rating">Rating</option>
-        <option value="location">Location</option>
-      </select>
+    <>
+      <div className='filter-box'>
+        <label htmlFor="filter">Sort By: </label>
+        <select name="filter" value={filter} onChange={handleChangeFilter}>
+          <option value="">-- Please Select --</option>
+          <option value="name">Name</option>
+          <option value="date">Most recent</option>
+          <option value="price-low">Price: low to high</option>
+          <option value="price-high">Price: high to low</option>
+          <option value="rating">Rating</option>
+          <option value="location">Location</option>
+        </select>
+      </div>
 
-      {filteredItems.map((item) => (
-        <div className="filterBox" key={item.id}>
-          <p>
-            {`Title: ${item.title} | Price: $${item.price} | Seller Rating: ${item.sellerRating}`}
-          </p>
-        </div>
+      {filteredItems.map((item, index) => (
+          <div className='filter-container' key={index}> 
+            <ItemPreview key={index} item={item} />
+          </div>
       ))}
-    </div>
+    </>
   );
 };
 
