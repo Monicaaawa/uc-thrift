@@ -74,6 +74,10 @@ const [userData, setUserData] = useState(userId);
 const calculateRating = (soldRatings, boughtRatings) => {
   const allRatings = [...soldRatings, ...boughtRatings];
 
+  if(allRatings.length === 0) {
+    return 5;
+  }
+
   // calculate average rating with equal weight given to sold and bought ratings
   const sum = allRatings.reduce((total, rating) => total + rating, 0);
   const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
@@ -208,7 +212,6 @@ const calculateRating = (soldRatings, boughtRatings) => {
        )}
      </div>
     </div>
-
     ) : (
       // if userId is null or undefined
       <div>
