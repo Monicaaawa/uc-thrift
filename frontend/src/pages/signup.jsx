@@ -16,18 +16,18 @@ function SignUp() {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!isPasswordValid(password)) {
-            setError("Password must be at least 8 characters long and have at least one uppercase letter and special character.");
+            setError("Password must be at least 8 characters long and have at least one uppercase letter and special character");
             return;
         }
 
         if(password !== confirmedPassword)
         {
-            setError("Passwords do not match.");
+            setError("Passwords do not match");
             return;
         }
 
         if (!isValidEmailDomain(email)) {
-            setError("Please use a valid UC campus email address.");
+            setError("Please use a valid UC campus email address");
             return;
         }
 
@@ -85,7 +85,7 @@ function SignUp() {
     return (
         <div className="page-center">
             <img style={{width: 180}} src="../../../src/assets/ucthrift.svg" alt="logo" />
-            <h2> sign up </h2>
+            <h2 style = {{ marginTop: 20, marginBottom: 20}}> sign up </h2>
             <form className="input-list" onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -93,6 +93,7 @@ function SignUp() {
                     autoComplete="off"
                     name="email"
                     className="input"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
@@ -101,6 +102,7 @@ function SignUp() {
                     autoComplete="off"
                     name="first"
                     className="input"
+                    required
                     onChange={(e) => setFirst(e.target.value)}
                 />
                 <input
@@ -109,6 +111,7 @@ function SignUp() {
                     autoComplete="off"
                     name="last"
                     className="input"
+                    required
                     onChange={(e) => setLast(e.target.value)}
                 />
                 <input
@@ -117,6 +120,7 @@ function SignUp() {
                     autoComplete="off"
                     name="password"
                     className="input"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
@@ -125,9 +129,10 @@ function SignUp() {
                     autoComplete="off"
                     name="confirm"
                     className="input"
+                    required
                     onChange={(e) => setConfirm(e.target.value)}
                 />
-                {error && <p className = "error" style={{ top: '525px' }}>{error}</p>}
+                {error && <p className = "error" style={{ top: '530px' }}>{error}</p>}
                 <button style={{marginTop: 40 + 'px'}} type="submit">
                     join now
                 </button>

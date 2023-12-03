@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from "../components/navigation/Navbar";
+import Header from '../components/Header';
 import './post.css';
+import ImageUpload from '../components/ImageUpload';
 
 const URL = 'http://localhost:8080';
 
@@ -41,13 +42,17 @@ export default function PostPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="post-page">
-        <img src = "https://via.placeholder.com/400x400" alt = "placeholder" />
-        <form onSubmit={handleSubmit}>     
-          <div className = "everything-but-image">
-            <div>               
-              <div className="title-container">
+      <Header />
+      <form className = "post-container" onSubmit={handleSubmit}>  
+        <div className = "not-button">
+          <div className = "image">
+            <h2 style={{ marginBottom: 5 }}> Image(s) </h2>
+            <ImageUpload />
+          </div>
+    
+          <div className = "not-image">
+            <div className="title-container">
+                <h2 style={{ marginBottom: 5 }}> Title </h2>
                 <input
                   type="text"
                   id="title"
@@ -57,21 +62,25 @@ export default function PostPage() {
                   onChange={handleChange}
                   required
                 />
-                <div className='price-container'>
-                  <h1>$</h1>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    required
-                  />
-                  {/* Need to handle negative input */}
-                </div>
-              </div>
+            </div>
+            <div className = "first-row">
+              <div className='price-container'>
+                  <h2 style={{ marginBottom: 5 }}> Price </h2>
+                  <span className = "currency-format">
+                    <span className = "dollar-sign"> $&nbsp; </span>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      value={formData.price}
+                      onChange={handleChange}
+                      required
+                    />
+                  </span>
+                  {/* Need to handle negative input */}   
+              </div>         
               <div className='condition-container'>
-                <p>Condition: </p>
+                <h2 style={{ marginBottom: 5 }}> Condition </h2>
                 <select
                   id="condition"
                   name="condition"
@@ -80,15 +89,15 @@ export default function PostPage() {
                   required
                 >
                   <option value="new">New</option>
-                  <option value="excellent">Excellent</option>
+                  <option value="excellent">Like New</option>
                   <option value="very-good">Very Good</option>
                   <option value="good">Good</option>
                   <option value="fair">Fair</option>
                   <option value="poor">Poor</option>
                 </select>
               </div>
-            </div>
-            <div>
+            </div>           
+            <div className = "desc-container">
               <h2 style={{ marginBottom: 5 }}> Description </h2>
               <textarea
                 id="description"
@@ -98,11 +107,10 @@ export default function PostPage() {
                 onChange={handleChange}
               />              
             </div>
-
-            <button type="submit">POST</button>
-            </div>
-        </form>
-      </div>
+          </div>
+        </div> 
+        <button type="submit">POST</button>
+      </form>
     </>
   );
 };
