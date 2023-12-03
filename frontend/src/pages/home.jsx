@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "../components/navigation/Navbar";
-import Searchbar from "../components/navigation/Searchbar";
+import Searchbar from "../components/search/Searchbar";
 import ItemPreview from "../components/ItemPreview";
+import DropdownFilter from "../components/search/DropdownFilter";
 import axios from 'axios';
 import './home.css';
 
@@ -19,9 +20,22 @@ export default function Home() {
     fetchCount();
   }, [currentPage]);
 
-  async function fetchItems() {
+  async function fetchItems(searchTerm = null, searchType = '') {
     try {
-      const response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      let response;
+
+      if (searchType === 'filter') {
+        setItems(searchTerm);
+        return;
+      } else if (searchType === 'search') {
+        try {
+          response = await axios.get(`${URL}/items/search?search=${searchTerm}`);
+        } catch (error) {
+          console.error('Error making request:', error.response.data);
+        }
+      } else {
+        response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      }
       setItems(response.data);
     } catch (e) {
       console.error('Error fetching items:', e);
@@ -51,10 +65,19 @@ export default function Home() {
     setCurrentPage(newPage);
   };
 
+  const handleSearch = (searchItems) => {
+    fetchItems(searchItems, 'search');
+  };
+
+  const handleFilter = (filterItems) => {
+    fetchItems(filterItems, 'filter');
+  }
+
   return (
     <>
       <Navbar />
-      <Searchbar />
+      <Searchbar onSearch={handleSearch}/>
+      <DropdownFilter onFilter={handleFilter} />
       <p>{count}</p>
       <div className='item-container'>
         {items && displayItems(items)}

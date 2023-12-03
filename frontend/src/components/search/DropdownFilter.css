@@ -1,0 +1,13 @@
+.filter-box {
+    position: absolute;
+    display: flex; 
+    min-width: 100px;
+    margin: 0 50px;
+    top: 190px;
+}
+
+.filter-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
