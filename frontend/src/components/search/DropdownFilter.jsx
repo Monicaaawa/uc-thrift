@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DropdownFilter.css';
-import ItemPreview from '../ItemPreview';
 
 const DropdownFilter = ({ onFilter }) => {
   const [filter, setFilter] = useState('');
@@ -17,68 +16,22 @@ const DropdownFilter = ({ onFilter }) => {
         let response;
 
         if (filter === 'name' || filter === 'date' || filter === 'price-low' || filter === 'price-high') {
-          response = await axios.get('http://localhost:8080/items');
-          const items = response.data;
-          let sortedItems;
-
-          if (filter === 'name') {
-            sortedItems = items.sort((a, b) => a.title.localeCompare(b.title));
-          } else if (filter === 'date') {
-            sortedItems = items.sort((a, b) => b.timestamp - a.timestamp);
-          } else if (filter === 'price-low') {
-            sortedItems = items.sort((a, b) => a.price - b.price);
-          } else if (filter === 'price-high') {
-            sortedItems = items.sort((a, b) => b.price - a.price);
-          }
-
-          setFilteredItems(sortedItems);
-        } else if (filter === 'rating') {
-            response = await axios.get('http://localhost:8080/users');
-            const sellers = response.data;
-            const sortedSellers = sellers.sort((a, b) => b.rating - a.rating);
-            console.log("sortedSellers: ", sortedSellers);
-  
-            const uniqueItemIds = new Set();
-            
-            const itemsPromises = sortedSellers.map(async (seller) => {
-              // Fetch items associated with the sorted sellers
-              const itemsResponse = await axios.get(`http://localhost:8080/items?sellerId=${seller.id}`);
-              const items = itemsResponse.data;
-              console.log("items; ", items);
-  
-              // Filter out items already added to the set
-              const newItems = items.filter((item) => !uniqueItemIds.has(item.id));
-              console.log("newItems: ", newItems);
-  
-              // Add new item IDs to the set
-              newItems.forEach((item) => uniqueItemIds.add(item.id));
-  
-              // Return an array of items with the seller rating
-              //return newItems.map((item) => ({ ...item, sellerRating: seller.rating}));
-              console.log("seller.rating: ", seller.rating);
-              return newItems.map((item) => (
-                { 
-                  ...item,
-                  sellerRating: seller.rating 
-                }
-              ));
-            });
-  
-            // Wait for all item fetch promises to resolve and flatten the array
-            const itemsArrays = await Promise.all(itemsPromises);
-            const itemsWithSellerRating = itemsArrays.flat();
-  
-            // Sort items by seller rating in descending order
-            const sortedItemsWithRating = itemsWithSellerRating.sort((a, b) => b.sellerRating - a.sellerRating);
-            setFilteredItems(sortedItemsWithRating);
+          response = await axios.get(`http://localhost:8080/items/filter?filter=${filter}`);
+          setFilteredItems(response.data);
         }
-        onFilter(null);
       } catch (error) {
         console.log('Error fetching and sorting items: ', error);
       }
     };
     fetchData();
   }, [filter]);
+
+  useEffect(() => {
+    if (filteredItems.length === 0) {
+      return;
+    }
+    onFilter(filteredItems);
+  }, [onFilter, filteredItems]);
 
   return (
     <>
@@ -94,12 +47,6 @@ const DropdownFilter = ({ onFilter }) => {
           <option value="location">Location</option>
         </select>
       </div>
-
-      {filteredItems.map((item, index) => (
-          <div className='filter-container' key={index}> 
-            <ItemPreview key={index} item={item} />
-          </div>
-      ))}
     </>
   );
 };

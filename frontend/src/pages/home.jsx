@@ -25,12 +25,11 @@ export default function Home() {
       let response;
 
       if (searchType === 'filter') {
-        setItems(null);
+        setItems(searchTerm);
         return;
       } else if (searchType === 'search') {
         try {
           response = await axios.get(`${URL}/items/search?search=${searchTerm}`);
-          console.log('Response:', response.data);
         } catch (error) {
           console.error('Error making request:', error.response.data);
         }
@@ -70,8 +69,8 @@ export default function Home() {
     fetchItems(searchItems, 'search');
   };
 
-  const handleFilter = () => {
-    fetchItems(null, 'filter');
+  const handleFilter = (filterItems) => {
+    fetchItems(filterItems, 'filter');
   }
 
   return (

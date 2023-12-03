@@ -98,21 +98,6 @@ app.get('/items', async (req, res) => {
     const skip = (page - 1) * perPage;
   
     try {
-        // let query = {};
-        // if (filter === 'name' || filter === 'date' || filter === 'price-low' || filter === 'price-high') {
-        //     response = await axios.get('http://localhost:8080/items');
-        //     let sortedItems;
-  
-        //     if (filter === 'name') {
-        //       sortedItems = response.data.sort((a, b) => a.title.localeCompare(b.title));
-        //     } else if (filter === 'date') {
-        //       sortedItems = response.data.sort((a, b) => b.timestamp - a.timestamp);
-        //     } else if (filter === 'price-low') {
-        //       sortedItems = response.data.sort((a, b) => a.price - b.price);
-        //     } else if (filter === 'price-high') {
-        //       sortedItems = response.data.sort((a, b) => b.price - a.price);
-        //     }
-        // }
         const items = await Item.find().skip(skip).limit(perPage);
         res.json(items);
     } catch (error) {
@@ -125,13 +110,36 @@ app.get('/items', async (req, res) => {
 app.get('/items/search', async (req, res) => {
     try {
         const search = req.query.search || '';
-        console.log('Search Query:', search);
-
         const items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
-        console.log('Search Results:', items);
         res.json(items);
     } catch (error) {
         console.error('Error fetching searched items:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get filtered items
+app.get('/items/filter', async (req, res) => {
+    try {
+        const { filter } = req.query;
+        const items = await Item.find();
+        let sortedItems;
+
+        if (filter === 'name') {
+            sortedItems = items.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (filter === 'date') {
+            sortedItems = items.sort((a, b) => b.timestamp - a.timestamp);
+        } else if (filter === 'price-low') {
+            sortedItems = items.sort((a, b) => a.price - b.price);
+        } else if (filter === 'price-high') {
+            sortedItems = items.sort((a, b) => b.price - a.price);
+        } else {
+            console.log('Other filters are not available');
+        }
+
+        res.json(sortedItems);
+    } catch (error) {
+        console.error('Error fetching and filtering items:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
