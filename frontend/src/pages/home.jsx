@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import ItemPreview from "../components/ItemPreview";
+import DropdownFilter from "../components/search/DropdownFilter";
 import axios from 'axios';
 import './home.css';
 
@@ -21,9 +22,22 @@ export default function Home() {
     fetchCount();
   }, [currentPage, itemsPerPage]);
 
-  async function fetchItems() {
+  async function fetchItems(searchTerm = null, searchType = '') {
     try {
-      const response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      let response;
+
+      if (searchType === 'filter') {
+        setItems(searchTerm);
+        return;
+      } else if (searchType === 'search') {
+        try {
+          response = await axios.get(`${URL}/items/search?search=${searchTerm}`);
+        } catch (error) {
+          console.error('Error making request:', error.response.data);
+        }
+      } else {
+        response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+      }
       setItems(response.data);
     } catch (e) {
       console.error('Error fetching items:', e);
