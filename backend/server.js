@@ -59,9 +59,7 @@ function sendEmail(to, subject, html) {
     });
 }
 
-// DON'T PUSH THIS CONNECTION STRING AND CHANGE BACK TO DEFAULTS
-connection = "mongodb+srv://angela:12345@ucthrift-dev.xpujbsq.mongodb.net/?retryWrites=true&w=majority"
-// connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
@@ -123,8 +121,9 @@ app.get('/items/filter', async (req, res) => {
     try {
         const { filter } = req.query;
         const items = await Item.find();
+        const users = await User.find();
         let sortedItems;
-
+        let sortedUsers;
         if (filter === 'name') {
             sortedItems = items.sort((a, b) => a.title.localeCompare(b.title));
         } else if (filter === 'date') {

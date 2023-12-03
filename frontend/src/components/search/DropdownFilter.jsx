@@ -18,7 +18,7 @@ const DropdownFilter = ({ onFilter }) => {
         if (filter === 'name' || filter === 'date' || filter === 'price-low' || filter === 'price-high') {
           response = await axios.get(`http://localhost:8080/items/filter?filter=${filter}`);
           setFilteredItems(response.data);
-        }
+        } 
       } catch (error) {
         console.log('Error fetching and sorting items: ', error);
       }
