@@ -27,7 +27,7 @@ const [userData, setUserData] = useState(userId);
 
  const getUser = async (userId) => {
    try {
-    if (userData === 'null') {
+    if (userId === null) {
       return;
     }
    const response = await axios.get(URL + '/users/' + userId);
@@ -68,7 +68,7 @@ const [userData, setUserData] = useState(userId);
 
  useEffect(() => {
   getUser(userId);
- }, []);
+ }, [userId]);
 
  // calculate user rating
 const calculateRating = (soldRatings, boughtRatings) => {
