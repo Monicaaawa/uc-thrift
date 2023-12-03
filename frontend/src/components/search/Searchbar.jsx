@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import './Searchbar.css';
 
 const Searchbar = ({ onSearch }) => {
-
     const handleChange = async (e) => {
-        const target = e.target.value.toLowerCase();
+        const target = e.target.value.toLowerCase(); 
 
         try {
             onSearch(target);
@@ -12,7 +10,6 @@ const Searchbar = ({ onSearch }) => {
             console.log("Error fetching items: ", error); 
         }
     };
-
     return (
         <>
             <div className='search-container'>

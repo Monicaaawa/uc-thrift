@@ -27,8 +27,13 @@ export default function Home() {
       if (searchType === 'filter') {
         setItems(null);
         return;
-      } else if (searchTerm && searchType === 'search') {
-        response = await axios.get(`${URL}/items?search=${searchTerm}`);
+      } else if (searchType === 'search') {
+        try {
+          response = await axios.get(`${URL}/items/search?search=${searchTerm}`);
+          console.log('Response:', response.data);
+        } catch (error) {
+          console.error('Error making request:', error.response.data);
+        }
       } else {
         response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
       }
