@@ -454,19 +454,3 @@ app.delete('/users/delete-profile-picture/:userId', async (req, res) => {
 
     res.send('Profile picture deleted successfully');
 });
-
-const newUser = new User({
-    firstName: "newuser",
-    lastName: "lastname",
-    email: "josiebruin@gmail.com",
-    password: "hello123",
-    campus: "UCLA",
-    rating: 5,
-    postedItemIds:['6553fff0954c988b17b3742a', '656046e2bc528e4ab7b79916', '65604858bc528e4ab7b79917'],
-    soldItems: ['6553fff0954c988b17b3742a', '656046e2bc528e4ab7b79916'],
-    boughtItems: [],
-    soldRatings: [3, 4, 3, 5],
-    boughtRatings: [1, 2]
-})
-
-newUser.save();
