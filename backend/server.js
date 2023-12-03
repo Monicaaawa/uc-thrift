@@ -312,7 +312,7 @@ app.post('/login', async (req, res) => {
         const user = await User.findOne({ email: email });
         if (user && await bcrypt.compare(password, user.password)) 
         {
-            res.json('Success');
+              res.json({ userObj: user._id, message: 'Success' });
         } 
         else 
         {

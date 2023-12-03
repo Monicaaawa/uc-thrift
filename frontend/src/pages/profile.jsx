@@ -1,23 +1,48 @@
 import React from 'react';
 import './profile.css';
+import Navbar from "../components/navigation/Navbar";
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
 
-const ProfilePage = () => {
- const userId = '6563a79964a01b13172d34ab'; //Josie Bruin
-//  const userId = '6563cef6161e4bbdde7d8c3c'; //Bob Brown
- const [userData, setUserData] = useState(userId);
+const ProfilePage = ( { userId: propUserId } ) => {
+
+let userId;
+
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
+ const [soldRatings, setSoldRatings] = useState([]);
+ const [boughtRatings, setBoughtRatings] = useState([]);
+
+ if (propUserId) {
+  userId = propUserId;
+} else { 
+  userId = sessionStorage.getItem('userId')
+}
+
+const [userData, setUserData] = useState(userId); 
+
 
  const URL = "http://localhost:8080"
 
- const getUser = async () => {
+ const getUser = async (userId) => {
    try {
+    if (userData === 'null') {
+      return;
+    }
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
-   const { boughtItems, soldItems } = response.data;
+
+   const { boughtRatings, soldRatings, boughtItems, soldItems } = response.data;
+
+    // Update ratings for the user
+    if (Array.isArray(boughtRatings)) {
+        setBoughtRatings(boughtRatings);
+      }
+  
+    if (Array.isArray(soldRatings)) {
+        setSoldRatings(soldRatings);
+      }
 
    // Fetch sold items details
    const fetchedSoldItems = await Promise.all(
@@ -26,9 +51,7 @@ const ProfilePage = () => {
        return itemResponse.data;
      })
    );
-
    setSoldItems(fetchedSoldItems);
-
     // Fetch bought items details
     const fetchedBoughtItems = await Promise.all(
       boughtItems.map(async (itemId) => {
@@ -36,7 +59,6 @@ const ProfilePage = () => {
         return itemResponse.data;
       })
     );
-  
     setBoughtItems(fetchedBoughtItems);
    }
    catch (error) {
@@ -45,9 +67,19 @@ const ProfilePage = () => {
 };
 
  useEffect(() => {
-   getUser();
+  getUser(userId);
  }, []);
 
+ // calculate user rating
+const calculateRating = (soldRatings, boughtRatings) => {
+  const allRatings = [...soldRatings, ...boughtRatings];
+
+  // calculate average rating with equal weight given to sold and bought ratings
+  const sum = allRatings.reduce((total, rating) => total + rating, 0);
+  const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
+  const roundedRating = Number(averageRating.toFixed(1)); 
+  return roundedRating;
+ }
 
  //sample user - use temporarily for reviews section
  const user = {
@@ -88,63 +120,70 @@ const ProfilePage = () => {
    ]
  }
 
-
  return (
-   <div className="profile-container">
-     <div className="profile-details">
-       <div className="profile-name">
-         <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({userData.rating}★)</span>}</h2>
-       </div>
+  <div className="page-container">
+      <div className="sticky-header">
+    <Navbar />
+  </div>
+    {userId ? (
+      // If userId exists, render profile details
+      <div className="profile-container">
+      <div className="profile-details">
+        <div className="profile-name">
+          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
+        </div>
+ 
+        <div className="profile-detail-others">
+          <p className="profile-detail-text"> {userData.campus}</p>
+          <br></br>
+          <p className="profile-detail-text"> {userData.email}</p>
+          <p className="profile-detail-text">  phone number </p>
+          <p className="profile-detail-text"> city, state </p>
+        </div>
+      </div>
 
-       <div className="profile-detail-others">
-         <p> {userData.email}</p>
-         <p> phone number </p>
-         <p> city, state </p>
-       </div>
-     </div>
+      <div className="sold-items">
+      <h3 className="small-header">Sold Items ({soldItems.length})</h3>
+      {soldItems.length === 0 ? (
+        <p className="no-items-message">No items to show.</p>
+      ) : (
+      <div className="sold-items-container">
+        <ul className="sold-items-list">
+          {soldItems.map(item => (
+            <li key={item.id}>
+              <div>
+                {<img src={`./../../images/image1.jpg`} />}
+              </div>
+              <p>{item.title}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      )}
+    </div>
 
-<div className="sold-items">
-<h3>Sold Items ({soldItems.length})</h3>
- {soldItems.length === 0 ? (
-   <p className="no-items-message">No items to show.</p>
- ) : (
-   <div className="sold-items-container">
-     <ul className="sold-items-list">
-       {soldItems.map(item => (
-         <li key={item.id}>
-           <div>
-             {<img src={`./../../images/image1.jpg`} />}
-           </div>
-           <span>{item.title}</span>
-         </li>
-       ))}
-     </ul>
-   </div>
- )}
-</div>
+    <div className="bought-items">
+    <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
+    {boughtItems.length === 0 ? (
+      <p className="no-items-message">No items to show.</p>
+    ) : (
+      <div className="bought-items-container">
+        <ul className="bought-items-list">
+          {boughtItems.map(item => (
+            <li key={item.id}>
+              <div>
+                {<img src={'./../../images/image1'} />}
+                </div>
+              <p>{item.title}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    </div>
 
-<div className="bought-items">
- <h3>Bought Items ({boughtItems.length})</h3>
- {boughtItems.length === 0 ? (
-   <p className="no-items-message">No items to show.</p>
- ) : (
-   <div className="bought-items-container">
-     <ul className="bought-items-list">
-       {boughtItems.map(item => (
-         <li key={item.id}>
-           <div>
-             {<img src={'./../../images/image1'} />}
-            </div>
-           <span>{item.title}</span>
-         </li>
-       ))}
-     </ul>
-   </div>
- )}
-</div>
-
-<div className="ratings-container">
-       <h3>Ratings ({user.numOfRatings})</h3>
+    <div className="ratings-container">
+       <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
          <p className="no-items-message">No ratings to show.</p>
        ) : (    
@@ -168,8 +207,16 @@ const ProfilePage = () => {
          </ul>      
        )}
      </div>
-   </div>
- );
+    </div>
+
+    ) : (
+      // if userId is null or undefined
+      <div>
+        <h1>Not signed in. Please sign in to see profile info.</h1>
+      </div>
+    )}
+  </div>
+  );
 };
 
 export default ProfilePage;

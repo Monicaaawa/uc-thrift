@@ -49,7 +49,22 @@ const User = mongoose.model("User", new mongoose.Schema({
             ref: 'Item'
         }],
         default: []
+    },
+
+    soldRatings: {
+        type: [{
+          type: Number, 
+        }],
+        default: [], 
+    },
+
+    boughtRatings: {
+        type: [{
+          type: Number, 
+        }],
+        default: [], 
     }
+
 }));
 
 module.exports = User;
