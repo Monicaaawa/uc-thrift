@@ -39,6 +39,7 @@ function SignIn() {
                     autoComplete="off"
                     name="email"
                     className="input"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
@@ -47,6 +48,7 @@ function SignIn() {
                     autoComplete="off"
                     name="password"
                     className="input"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 {error && <p className = "error" style={{ top: '425px' }}>{error}</p>}

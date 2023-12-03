@@ -15,13 +15,14 @@
     align-items: center;
     width: 80vw;
     padding: 0 50px;
+    position: relative;
 }
 
 .search-icon {
     position: absolute;
     width: 20px;
     top: 50%;
-    right: 145px;
+    right: 70px;
     transform: translateY(-50%);
 }
 
@@ -73,6 +74,6 @@
     }
 
     .search-icon {
-        right: 120px;
+        right: 50px;
     }
 }

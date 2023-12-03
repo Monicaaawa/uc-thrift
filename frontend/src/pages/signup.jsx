@@ -93,6 +93,7 @@ function SignUp() {
                     autoComplete="off"
                     name="email"
                     className="input"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
@@ -101,6 +102,7 @@ function SignUp() {
                     autoComplete="off"
                     name="first"
                     className="input"
+                    required
                     onChange={(e) => setFirst(e.target.value)}
                 />
                 <input
@@ -109,6 +111,7 @@ function SignUp() {
                     autoComplete="off"
                     name="last"
                     className="input"
+                    required
                     onChange={(e) => setLast(e.target.value)}
                 />
                 <input
@@ -117,6 +120,7 @@ function SignUp() {
                     autoComplete="off"
                     name="password"
                     className="input"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
@@ -125,6 +129,7 @@ function SignUp() {
                     autoComplete="off"
                     name="confirm"
                     className="input"
+                    required
                     onChange={(e) => setConfirm(e.target.value)}
                 />
                 {error && <p className = "error" style={{ top: '530px' }}>{error}</p>}
