@@ -13,8 +13,10 @@ function SignIn() {
         axios.post('http://localhost:8080/login', {email, password})
         .then(result => {
             console.log(result)
-            if(result.data === "Success")
+            if(result.data.message === "Success")
             {
+                const userId = result.data.userObj; 
+                sessionStorage.setItem('userId', userId);
                 navigate('/home');
             }
             else
@@ -31,7 +33,7 @@ function SignIn() {
     return (
         <div className="page-center">
             <img style={{width: 180}} src="../../../src/assets/ucthrift.svg" alt="logo" />
-            <h2> sign in </h2>
+            <h2 style = {{ marginTop: 20, marginBottom: 20}}> sign in </h2>
             <form className="input-list" onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -39,6 +41,7 @@ function SignIn() {
                     autoComplete="off"
                     name="email"
                     className="input"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
@@ -47,9 +50,10 @@ function SignIn() {
                     autoComplete="off"
                     name="password"
                     className="input"
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                {error && <p className = "error" style={{ top: '420px' }}>{error}</p>}
+                {error && <p className = "error" style={{ top: '425px' }}>{error}</p>}
                 <button style={{marginTop: 40 + 'px'}} type="submit">
                     log in
                 </button>
