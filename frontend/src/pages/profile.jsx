@@ -1,14 +1,15 @@
 import React from 'react';
 import './profile.css';
 import Navbar from "../components/navigation/Navbar";
-import axios from 'axios'
-import { useState } from 'react'
+import axios from 'axios';
+import { useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+;
 
 const ProfilePage = ( { userId: propUserId } ) => {
 
 let userId;
-
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
@@ -209,6 +210,9 @@ const calculateRating = (soldRatings) => {
       // if userId is null or undefined
       <div>
         <h1>Not signed in. Please sign in to see profile info.</h1>
+        <Link to="/login">
+                <button>Go to Login</button>
+            </Link>
       </div>
     )}
   </div>
