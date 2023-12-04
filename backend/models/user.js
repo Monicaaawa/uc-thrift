@@ -58,12 +58,12 @@ const User = mongoose.model("User", new mongoose.Schema({
         default: [], 
     },
 
-    boughtRatings: {
-        type: [{
-          type: Number, 
-        }],
-        default: [], 
-    }
+    // boughtRatings: {
+    //     type: [{
+    //       type: Number, 
+    //     }],
+    //     default: [], 
+    // }
 
 }));
 

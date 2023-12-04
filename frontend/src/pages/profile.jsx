@@ -12,7 +12,7 @@ let userId;
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
- const [boughtRatings, setBoughtRatings] = useState([]);
+//  const [boughtRatings, setBoughtRatings] = useState([]);
 
  if (propUserId) {
   userId = propUserId;
@@ -33,12 +33,13 @@ const [userData, setUserData] = useState(userId);
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
 
-   const { boughtRatings, soldRatings, boughtItems, soldItems } = response.data;
+  //  const { boughtRatings, soldRatings, boughtItems, soldItems } = response.data;
+   const { soldRatings, boughtItems, soldItems } = response.data;
 
     // Update ratings for the user
-    if (Array.isArray(boughtRatings)) {
-        setBoughtRatings(boughtRatings);
-      }
+    // if (Array.isArray(boughtRatings)) {
+    //     setBoughtRatings(boughtRatings);
+    //   }
   
     if (Array.isArray(soldRatings)) {
         setSoldRatings(soldRatings);
@@ -71,8 +72,22 @@ const [userData, setUserData] = useState(userId);
  }, [userId]);
 
  // calculate user rating
-const calculateRating = (soldRatings, boughtRatings) => {
-  const allRatings = [...soldRatings, ...boughtRatings];
+// const calculateRating = (soldRatings, boughtRatings) => {
+//   const allRatings = [...soldRatings, ...boughtRatings];
+
+//   if(allRatings.length === 0) {
+//     return 5;
+//   }
+
+//   // calculate average rating with equal weight given to sold and bought ratings
+//   const sum = allRatings.reduce((total, rating) => total + rating, 0);
+//   const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
+//   const roundedRating = Number(averageRating.toFixed(1)); 
+//   return roundedRating;
+//  }
+
+const calculateRating = (soldRatings) => {
+  const allRatings = soldRatings;
 
   if(allRatings.length === 0) {
     return 5;
@@ -134,7 +149,8 @@ const calculateRating = (soldRatings, boughtRatings) => {
       <div className="profile-container">
       <div className="profile-details">
         <div className="profile-name">
-          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
+          {/* <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2> */}
+          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings)}★)</span>}</h2>
         </div>
  
         <div className="profile-detail-others">
