@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-;
 
 const ProfilePage = ( { userId: propUserId } ) => {
 
@@ -80,42 +79,42 @@ const calculateRating = (soldRatings) => {
  }
 
  //sample user - use temporarily for reviews section
- const user = {
-   name: 'Joe Bruin',
-   email: 'joebruin@gmail.com',
-   phone: '(111) 111-1111',
-   city: 'Los Angeles',
-   state: 'CA',
-   rating: 4.5,
-   hasReview: true,
-   numOfSoldItems: 4,
-   numOfRatings: 3,
-   numOfBoughtItems: 4,
-   soldItems: [
-     { id: 1, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-     { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-     { id: 4, name: 'Desk Lamp', image: 'image4.jpg'},
-     { id: 5, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 6, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 7, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 8, name: 'Math 33a Textbook', image: 'image1.jpg' }
+//  const user = {
+//    name: 'Joe Bruin',
+//    email: 'joebruin@gmail.com',
+//    phone: '(111) 111-1111',
+//    city: 'Los Angeles',
+//    state: 'CA',
+//    rating: 4.5,
+//    hasReview: true,
+//    numOfSoldItems: 4,
+//    numOfRatings: 3,
+//    numOfBoughtItems: 4,
+//    soldItems: [
+//      { id: 1, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
+//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
+//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'},
+//      { id: 5, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 6, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 7, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 8, name: 'Math 33a Textbook', image: 'image1.jpg' }
 
 
-   ],
-   boughtItems: [
-     { id: 1, name: 'Math 33a Textbook', image: 'image1.png' },
-     { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-     { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-     { id: 4, name: 'Desk Lamp', image: 'image4.jpg'}
-   ],
+//    ],
+//    boughtItems: [
+//      { id: 1, name: 'Math 33a Textbook', image: 'image1.png' },
+//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
+//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
+//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'}
+//    ],
 
-   reviewsList: [
-     { id: 1, name: 'Josie Bruin', comment: 'Very good!', rating: 3},
-     { id: 2, name: 'Bob Joe', comment: 'Eh, it was ok.', rating: 4},
-     { id: 3, name: 'Aunt Sally', comment: 'THE ABSOLUTE BEST!', rating: 5},
-   ]
- }
+//    reviewsList: [
+//      { id: 1, name: 'Josie Bruin', comment: 'Very good!', rating: 3},
+//      { id: 2, name: 'Bob Joe', comment: 'Eh, it was ok.', rating: 4},
+//      { id: 3, name: 'Aunt Sally', comment: 'THE ABSOLUTE BEST!', rating: 5},
+//    ]
+//  }
 
  return (
   <div className="page-container">
@@ -135,8 +134,6 @@ const calculateRating = (soldRatings) => {
           <p className="profile-detail-text"> {userData.campus}</p>
           <br></br>
           <p className="profile-detail-text"> {userData.email}</p>
-          <p className="profile-detail-text">  phone number </p>
-          <p className="profile-detail-text"> city, state </p>
         </div>
       </div>
 
@@ -180,7 +177,7 @@ const calculateRating = (soldRatings) => {
     )}
     </div>
 
-    <div className="ratings-container">
+    {/* <div className="ratings-container">
        <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
          <p className="no-items-message">No ratings to show.</p>
@@ -204,7 +201,7 @@ const calculateRating = (soldRatings) => {
            ))}
          </ul>      
        )}
-     </div>
+     </div> */}
     </div>
     ) : (
       // if userId is null or undefined
