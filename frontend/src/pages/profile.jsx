@@ -1,8 +1,9 @@
 import React from 'react';
 import './profile.css';
-import Navbar from "../components/navigation/Navbar";
-import axios from 'axios';
-import { useState } from 'react';
+import Header from '../components/Header';
+// import Navbar from "../components/navigation/Navbar";
+import axios from 'axios'
+import { useState } from 'react'
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -119,7 +120,7 @@ const calculateRating = (soldRatings) => {
  return (
   <div className="page-container">
       <div className="sticky-header">
-    <Navbar />
+    <Header />
   </div>
     {userId ? (
       // If userId exists, render profile details

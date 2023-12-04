@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from "../components/navigation/Navbar";
-import Searchbar from "../components/search/Searchbar";
+import Header from '../components/Header';
 import ItemPreview from "../components/ItemPreview";
 import DropdownFilter from "../components/search/DropdownFilter";
 import axios from 'axios';
@@ -8,17 +7,20 @@ import './home.css';
 
 const URL = 'http://localhost:8080';
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE_DEFAULT = 6;
+const storedItemsPerPage = localStorage.getItem('itemsPerPage');
+const ITEMS_PER_PAGE = storedItemsPerPage ? parseInt(storedItemsPerPage, 10) : ITEMS_PER_PAGE_DEFAULT;
 
 export default function Home() {
   const [items, setItems] = useState(null);
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_DEFAULT);
 
   useEffect(() => {
     fetchItems();
     fetchCount();
-  }, [currentPage]);
+  }, [currentPage, itemsPerPage]);
 
   async function fetchItems(searchTerm = null, searchType = '') {
     try {
@@ -56,56 +58,115 @@ export default function Home() {
       return <p>Loading...</p>;
     }
 
-    return items.map((item, index) => (
+    // Default is newer items on top
+    const reversedItems = items.slice().reverse();
+
+    return reversedItems.map((item, index) => (
       <ItemPreview key={index} item={item} />
     ));
   }
 
+  const handleItemsPerPageChange = (value) => {
+    localStorage.setItem('itemsPerPage', value);
+    setItemsPerPage(value);
+    setCurrentPage(1); 
+    window.location.reload();
+  };
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
-  };
 
-  const handleSearch = (searchItems) => {
-    fetchItems(searchItems, 'search');
+    // A little wonky can fix later
+    document.documentElement.style.scrollBehavior = 'smooth';
+    document.documentElement.scrollTop = 0;
   };
-
-  const handleFilter = (filterItems) => {
-    fetchItems(filterItems, 'filter');
-  }
 
   return (
     <>
-      <Navbar />
-      <Searchbar onSearch={handleSearch}/>
-      <DropdownFilter onFilter={handleFilter} />
-      <p>{count}</p>
-      <div className='item-container'>
-        {items && displayItems(items)}
+      <Header />
+      <div className = "home-container">
+        <div className = "filter-container">
+          <span className = "chip"> Filter </span>
+          {/* Insert dropdown menus of price, condition, date */}
+        </div>
+        <div className = "rest-container">
+          <div className = "top">
+            <span className = "item-info"> 
+              Items per page:&nbsp;&nbsp;
+              <select
+                className="items-per-page"
+                value={ITEMS_PER_PAGE}
+                onChange={(e) => handleItemsPerPageChange(e.target.value)}
+              >
+                <option value="6">6</option>
+                <option value="12">12</option>
+                <option value="18">18</option>
+                <option value="24">24</option>
+              </select>
+
+              <span className = "chip">{count} Items </span>
+            </span>
+            <span className = "chip"> Sort </span>
+          </div>
+
+          <div className='item-container'>
+            {items && displayItems(items)}
+          </div>
+          <Pagination currentPage={currentPage} totalItems={count} onPageChange={handlePageChange} />
+        </div>
       </div>
-      <Pagination currentPage={currentPage} totalItems={count} onPageChange={handlePageChange} />
+      
     </>
   );
 } 
 
 const Pagination = ({ currentPage, totalItems, onPageChange }) => {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const maxDisplayedPages = 5;
+
+  const calculateStartIndex = () => {
+    if (currentPage <= Math.floor(maxDisplayedPages / 2) + 1) 
+    {
+      return 1;
+    } 
+    
+    else if (currentPage >= totalPages - Math.floor(maxDisplayedPages / 2)) 
+    {
+      return totalPages - maxDisplayedPages + 1;
+    } 
+    
+    else 
+    {
+      return currentPage - Math.floor(maxDisplayedPages / 2);
+    }
+  };
+
+  const pagesArray = Array.from({ length: Math.min(maxDisplayedPages, totalPages) }, (_, index) => {
+    return calculateStartIndex() + index;
+  });
 
   return (
     <div className="pagination-container">
       <button
-        className="pagination-button"
+        className="pagination-button previous"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
-        Previous
       </button>
-      <p className="pagination-text">Page {currentPage} of {totalPages}</p>
+      {pagesArray.map((page) => (
+        <button
+          key={page}
+          className={`pagination-button ${currentPage === page ? 'active' : ''}`}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </button>
+      ))}
       <button
-        className="pagination-button"
+        className="pagination-button next"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
-        Next
       </button>
     </div>
   );

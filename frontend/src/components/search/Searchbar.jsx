@@ -1,4 +1,5 @@
 import './Searchbar.css';
+import search from '../../../src/assets/search.svg';
 
 const Searchbar = ({ onSearch }) => {
     const handleChange = async (e) => {
@@ -12,14 +13,14 @@ const Searchbar = ({ onSearch }) => {
     };
     return (
         <>
-            <div className='search-container'>
+            <div className="search-container">
                 <input 
                     className="search"
                     type="text"
-                    placeholder="Search here"
+                    placeholder="Search items"
                     onChange={handleChange}
                 />
-                <img className="search-icon" src="../../../src/assets/searchbarIcon.svg" alt="search icon" />
+                <img className="search-icon" src={search} alt="search icon" />
             </div>
         </>
     );
