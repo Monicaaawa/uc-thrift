@@ -1,3 +1,15 @@
+.container {
+    position: absolute;
+    display: flex;
+    flex-direction: horizontal;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 25px;
+    width: 100%;
+    top: 15px;
+}
+
 .search-container {
     display: flex; 
     align-items: center;
@@ -31,7 +43,32 @@
     outline-color: #395c7b;
 }
 
+.nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.web img {
+    height: 70px;
+}
+
+.mobile {
+    display: none;
+}
+
 @media (max-width: 800px) {
+    .web {
+        display: none;
+    }
+
+    .mobile {
+        display: flex;
+    }
+
+    .mobile img {
+        height: 70px;
+    }
+
     .search-container {
         padding: 0 30px;
     }
