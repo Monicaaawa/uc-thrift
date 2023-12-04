@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'
 
 const ProfilePage = ( { userId: propUserId } ) => {
 
@@ -13,6 +13,8 @@ let userId;
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
+ const navigate = useNavigate()
+
 
  if (propUserId) {
   userId = propUserId;
@@ -78,6 +80,17 @@ const calculateRating = (soldRatings) => {
   const roundedRating = Number(averageRating.toFixed(1)); 
   return roundedRating;
  }
+
+ const handleSignOut = () => {
+  // Clear the user session data upon sign-out
+  sessionStorage.removeItem('userId');
+  
+  // Optionally, redirect the user to the login page or another appropriate route
+  // navigate('/login'); // Redirect to the login page after sign-out
+  navigate('/');
+
+};
+
 
  //sample user - use temporarily for reviews section
 //  const user = {
@@ -178,6 +191,9 @@ const calculateRating = (soldRatings) => {
     )}
     </div>
 
+    <button className="sign-in-out-button"onClick={handleSignOut}>Sign Out</button>
+
+
     {/* <div className="ratings-container">
        <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
@@ -206,10 +222,10 @@ const calculateRating = (soldRatings) => {
     </div>
     ) : (
       // if userId is null or undefined
-      <div>
+      <div className="not-signed-in-message">
         <h1>Not signed in. Please sign in to see profile info.</h1>
         <Link to="/login">
-                <button>Go to Login</button>
+                <button className="sign-in-out-button">Go to Login</button>
             </Link>
       </div>
     )}
