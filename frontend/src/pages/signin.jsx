@@ -17,7 +17,7 @@ function SignIn() {
             {
                 const userId = result.data.userObj; 
                 sessionStorage.setItem('userId', userId);
-                navigate('/home');
+                navigate('/');
             }
             else
             {
