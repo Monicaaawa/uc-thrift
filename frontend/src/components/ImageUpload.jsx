@@ -6,7 +6,6 @@ import axios from 'axios';
 const ImageUpload = ({ onImageUpload }) => {
     const [imageSrc, setImageSrc] = useState('');
     
-    // One Image
     const handleImageChange = async (event) => {
         const file = event.target.files[0];
 
@@ -17,7 +16,7 @@ const ImageUpload = ({ onImageUpload }) => {
             
             try 
             {
-                const response = await axios.post('http://localhost:8080/items/upload-image', formData);
+                const response = await axios.post('http://localhost:8080/upload-image', formData);
                 const { imagePath } = response.data;
                 setImageSrc(imagePath);
                 onImageUpload(imagePath); // Communicate the URL back to the parent component

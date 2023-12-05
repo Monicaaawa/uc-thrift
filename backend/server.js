@@ -160,6 +160,7 @@ app.post('/items/new', async (req, res) => {
         price: req.body.price,
         condition: req.body.condition,
         description: req.body.description,
+        image: req.body.image,
         timestamp: Date.now(),
     });
     console.log(item)
@@ -220,38 +221,13 @@ app.delete('/items/delete/:_id', async (req, res) => {
 });
 
 // Add item images
-app.post('/items/upload-images', upload.array('images', 5), async (req, res) => {
-    const item = await Item.findById(req.body.itemId);
-    if (!item) {
-        return res.status(404).send('Item not found');
+app.post('/upload-image', upload.single('image'), async (req, res) => {
+    if (!req.file)
+    {
+        return res.status(400).send('No image uploaded')
     }
-
-    const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
-    item.images.push(...imagePaths);
-    await item.save();
-
-    res.json({ message: 'Images uploaded successfully', imagePaths: item.images });
-});
-
-// Delete item images(individual)
-app.delete('/items/delete-image/:itemId/:imageName', async (req, res) => {
-    const item = await Item.findById(req.params.itemId);
-    if (!item) {
-        return res.status(404).send('Item not found');
-    }
-
-    const imageToDelete = `/uploads/${req.params.imageName}`;
-    item.images = item.images.filter(image => image !== imageToDelete);
-    await item.save();
-
-    fs.unlink(path.join(__dirname, imageToDelete), (err) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Error deleting the file');
-        }
-    });
-
-    res.send('Image deleted successfully');
+    const imagePath = `/uploads/${req.file.filename}`;
+    res.json({ message: 'Image uploaded successfully', imagePath });
 });
 
 // Sold Item Handling
