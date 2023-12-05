@@ -1,7 +1,6 @@
 import React from 'react';
 import './profile.css';
 import Header from '../components/Header';
-// import Navbar from "../components/navigation/Navbar";
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
@@ -81,53 +80,10 @@ const calculateRating = (soldRatings) => {
  }
 
  const handleSignOut = () => {
-  // Clear the user session data upon sign-out
+  // Clear user session data 
   sessionStorage.removeItem('userId');
-  
-  // Optionally, redirect the user to the login page or another appropriate route
-  // navigate('/login'); // Redirect to the login page after sign-out
   navigate('/');
-
 };
-
-
- //sample user - use temporarily for reviews section
-//  const user = {
-//    name: 'Joe Bruin',
-//    email: 'joebruin@gmail.com',
-//    phone: '(111) 111-1111',
-//    city: 'Los Angeles',
-//    state: 'CA',
-//    rating: 4.5,
-//    hasReview: true,
-//    numOfSoldItems: 4,
-//    numOfRatings: 3,
-//    numOfBoughtItems: 4,
-//    soldItems: [
-//      { id: 1, name: 'Math 33a Textbook', image: 'image1.jpg' },
-//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'},
-//      { id: 5, name: 'Math 33a Textbook', image: 'image1.jpg' },
-//      { id: 6, name: 'Math 33a Textbook', image: 'image1.jpg' },
-//      { id: 7, name: 'Math 33a Textbook', image: 'image1.jpg' },
-//      { id: 8, name: 'Math 33a Textbook', image: 'image1.jpg' }
-
-
-//    ],
-//    boughtItems: [
-//      { id: 1, name: 'Math 33a Textbook', image: 'image1.png' },
-//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'}
-//    ],
-
-//    reviewsList: [
-//      { id: 1, name: 'Josie Bruin', comment: 'Very good!', rating: 3},
-//      { id: 2, name: 'Bob Joe', comment: 'Eh, it was ok.', rating: 4},
-//      { id: 3, name: 'Aunt Sally', comment: 'THE ABSOLUTE BEST!', rating: 5},
-//    ]
-//  }
 
  return (
   <div className="page-container">
@@ -139,7 +95,6 @@ const calculateRating = (soldRatings) => {
       <div className="profile-container">
       <div className="profile-details">
         <div className="profile-name">
-          {/* <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2> */}
           <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings)}★)</span>}</h2>
         </div>
  
@@ -191,33 +146,6 @@ const calculateRating = (soldRatings) => {
     </div>
 
     <button className="sign-in-out-button"onClick={handleSignOut}>Sign Out</button>
-
-
-    {/* <div className="ratings-container">
-       <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
-       {user.numOfRatings === 0 ? (
-         <p className="no-items-message">No ratings to show.</p>
-       ) : (    
-         <ul className="reviews-list">
-           {user.reviewsList.map(review => (
-             <li key={review.id}>
-               <div className="review-name-container">
-                 <p className="reviewer-name">
-                   <span className="review-name-align-left">{review.name} </span>
-                   </p>
-                 <span className="star-container">
-                   {Array.from({ length: user.rating }).map((_, index) => (
-                   <span key={index}>★</span>
-                   ))}
-                   </span>
-               </div>
-               <p className="bought-from-text">bought from {user.name}</p>
-               <p className="review-comment">"{review.comment}"</p>
-             </li>
-           ))}
-         </ul>      
-       )}
-     </div> */}
     </div>
     ) : (
       // if userId is null or undefined
