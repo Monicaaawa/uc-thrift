@@ -144,4 +144,4 @@ export default function ItemDetails({ item, userId: propUserId }) {
       </div>
     </>
   );
-};
+}

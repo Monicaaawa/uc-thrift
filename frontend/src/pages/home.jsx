@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../components/Header';
 import ItemPreview from "../components/ItemPreview";
-import DropdownFilter from "../components/search/DropdownFilter";
+import Searchbar from '../components/search/Searchbar';
+import DropdownFilter from '../components/search/DropdownFilter';
 import axios from 'axios';
 import './home.css';
 
@@ -16,33 +17,42 @@ export default function Home() {
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_DEFAULT);
+  const [sorted, setSorted] = useState(false);
+  const [filteredChoice, setFilteredChoice] = useState('');
+  const[searchTerm, setSearchTerm] = useState('');
+  const [filterTerm, setFilterTerm] = useState('');
 
   useEffect(() => {
-    fetchItems();
+    fetchItems(searchTerm, filterTerm);
     fetchCount();
   }, [currentPage, itemsPerPage]);
 
-  async function fetchItems(searchTerm = null, searchType = '') {
-    try {
-      let response;
-
-      if (searchType === 'filter') {
-        setItems(searchTerm);
-        return;
-      } else if (searchType === 'search') {
-        try {
-          response = await axios.get(`${URL}/items/search?search=${searchTerm}`);
-        } catch (error) {
-          console.error('Error making request:', error.response.data);
+  const fetchItems = useCallback((searchTerm, filterTerm) => {
+    const fetchData = async () => {
+      try {
+        let response;
+        if (filterTerm && searchTerm) { 
+          response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}&search=${searchTerm}&filter=${filterTerm}`);
+          setSorted(true);
+          setFilteredChoice(filterTerm);
+        } else if (filterTerm) {
+          response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}&filter=${filterTerm}`);
+          setSorted(true);
+          setFilteredChoice(filterTerm);
+        } else if (searchTerm) {
+          response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}&search=${searchTerm}`);
+          setSorted(true);
+        } else {
+          response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+          setSorted(false);
         }
-      } else {
-        response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
+        setItems(response.data);
+      } catch (e) {
+        console.error('Error fetching items:', e);
       }
-      setItems(response.data);
-    } catch (e) {
-      console.error('Error fetching items:', e);
-    }
-  }
+    };
+    fetchData();
+  }, [setSorted, setFilteredChoice, setItems, currentPage])
 
   async function fetchCount() {
     try {
@@ -57,8 +67,17 @@ export default function Home() {
     if (!items) {
       return <p>Loading...</p>;
     }
+    
+    if (sorted) {
+      return items.map((item, index) => (
+        <ItemPreview key={index} item={item} />
+      ));
+    }
+   
+    // Default is newer items on top
+    const reversedItems = items.slice().reverse();
 
-    return items.map((item, index) => (
+    return reversedItems.map((item, index) => (
       <ItemPreview key={index} item={item} />
     ));
   }
@@ -78,14 +97,23 @@ export default function Home() {
     document.documentElement.scrollTop = 0;
   };
 
+  const callAction = (input) => {
+    if (input === 'name' || input === 'date' || input === 'price-low' || input === 'price-high') {
+      setFilterTerm(input);    
+    } else {
+      setSearchTerm(input); 
+    }
+  }
+
+  useEffect(() => {
+    fetchItems(searchTerm, filterTerm);
+  },[searchTerm, filterTerm, fetchItems]);
+
   return (
     <>
       <Header />
+      <Searchbar onSearch={callAction}/>
       <div className = "home-container">
-        <div className = "filter-container">
-          <span className = "chip"> Filter </span>
-          {/* Insert dropdown menus of price, condition, date */}
-        </div>
         <div className = "rest-container">
           <div className = "top">
             <span className = "item-info"> 
@@ -103,7 +131,9 @@ export default function Home() {
 
               <span className = "chip">{count} Items </span>
             </span>
-            <span className = "chip"> Sort </span>
+            <div className="chip">
+              <DropdownFilter onFilter={callAction} selectedFilter={filteredChoice}/>
+            </div>
           </div>
 
           <div className='item-container'>
