@@ -8,7 +8,7 @@ import './home.css';
 
 const URL = 'http://localhost:8080';
 
-const ITEMS_PER_PAGE_DEFAULT = 6;
+const ITEMS_PER_PAGE_DEFAULT = 12;
 const storedItemsPerPage = localStorage.getItem('itemsPerPage');
 const ITEMS_PER_PAGE = storedItemsPerPage ? parseInt(storedItemsPerPage, 10) : ITEMS_PER_PAGE_DEFAULT;
 
@@ -24,8 +24,13 @@ export default function Home() {
 
   useEffect(() => {
     fetchItems(searchTerm, filterTerm);
-    fetchCount();
   }, [currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    fetchItems(searchTerm, filterTerm);
+    fetchCount(searchTerm);
+    setCurrentPage(1);
+  },[searchTerm, filterTerm]);
 
   const fetchItems = useCallback((searchTerm, filterTerm) => {
     const fetchData = async () => {
@@ -54,9 +59,9 @@ export default function Home() {
     fetchData();
   }, [setSorted, setFilteredChoice, setItems, currentPage])
 
-  async function fetchCount() {
+  async function fetchCount(searchTerm) {
     try {
-        const response = await axios.get(`${URL}/items/count`);
+        const response = await axios.get(`${URL}/items/count?&search=${searchTerm}`);
         setCount(response.data);
       } catch (e) {
         console.error('Error fetching item count:', e);
@@ -104,10 +109,6 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    fetchItems(searchTerm, filterTerm);
-  },[searchTerm, filterTerm, fetchItems]);
-
   return (
     <>
       <Header />
@@ -122,9 +123,7 @@ export default function Home() {
                 value={ITEMS_PER_PAGE}
                 onChange={(e) => handleItemsPerPageChange(e.target.value)}
               >
-                <option value="6">6</option>
                 <option value="12">12</option>
-                <option value="18">18</option>
                 <option value="24">24</option>
               </select>
 

@@ -81,7 +81,7 @@ app.listen(8080, () => console.log('Server listening on port 8080: http://localh
 // Get searched, sorted, and/or paginated items
 app.get('/items', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const perPage = parseInt(req.query.perPage) || 6;
+    const perPage = parseInt(req.query.perPage) || 12;
     const skip = (page - 1) * perPage;
 
     try {
@@ -117,11 +117,20 @@ app.get('/items', async (req, res) => {
 // Get number of items
 app.get('/items/count', async (req, res) => {
     try {
-      const count = await Item.countDocuments();
-      res.json(count);
+        let items;
+
+        const search = req.query.search || '';
+
+        if (search) {
+            items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
+        } else {
+            items = await Item.find();
+        }
+
+        res.json(items.length);
     } catch (error) {
-      console.error('Error fetching item count:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error fetching item count:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
