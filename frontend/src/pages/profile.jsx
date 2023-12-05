@@ -213,7 +213,7 @@ const calculateRating = (soldRatings, boughtRatings) => {
     ) : (
       // if userId is null or undefined
       <div>
-        <h1>Not signed in. Please sign in to see profile info.</h1>
+        <h2 className = "page-center">Not signed in. Please sign in to see profile info.</h2>
       </div>
     )}
   </div>
