@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 import upload from '../assets/upload.svg';
 import './ImageUpload.css';
+import axios from 'axios';
 
-const ImageUpload = () => {
+const ImageUpload = ({ onImageUpload }) => {
     const [imageSrc, setImageSrc] = useState('');
     
     // One Image
-    const handleImageChange = (event) => {
+    const handleImageChange = async (event) => {
         const file = event.target.files[0];
 
-        if (file) {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-            setImageSrc(reader.result);
-        };
-
-        reader.readAsDataURL(file);
+        if (file) 
+        {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try 
+            {
+                const response = await axios.post('http://localhost:8080/items/upload-image', formData);
+                const { imagePath } = response.data;
+                setImageSrc(imagePath);
+                onImageUpload(imagePath); // Communicate the URL back to the parent component
+            }
+            catch (error) 
+            {
+                console.error('Error uploading image:', error);
+            }
         }
     };
 
