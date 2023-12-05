@@ -27,10 +27,10 @@ export default function PostPage() {
     }));
   };
 
-  const handleImageUpload = (imageUrl) => {
+  const handleImageUpload = (image) => {
     setFormData((prevData) => ({
       ...prevData,
-      imageUrl
+      image
     }));
   };
 
