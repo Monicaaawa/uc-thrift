@@ -69,6 +69,7 @@
         height: 70px;
     }
 
+@media (max-width: 800px) {
     .search-container {
         padding: 0 30px;
     }

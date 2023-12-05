@@ -22,6 +22,20 @@ export default function ItemPreview({ item }) {
     fetchSellerInfo();
   }, []);
 
+  const calculateRating = (soldRatings) => {
+    const allRatings = soldRatings;
+  
+    if(allRatings.length === 0) {
+      return 5;
+    }
+  
+    // calculate average rating with equal weight given to sold and bought ratings
+    const sum = allRatings.reduce((total, rating) => total + rating, 0);
+    const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
+    const roundedRating = Number(averageRating.toFixed(1)); 
+    return roundedRating;
+   }
+
   return (
     <div className="item-preview">
         <Link to={`/item/${item._id}`}>
@@ -35,7 +49,7 @@ export default function ItemPreview({ item }) {
             <div className="seller-info">
             {seller ? (
                 <>
-                <p>{seller.firstName} {seller.lastName} ({seller.rating}★)</p>
+                <p>{seller.firstName} {seller.lastName} ({calculateRating(seller.soldRatings)}★)</p>
                 </>
             ) : (
                 <p>Loading seller information...</p>

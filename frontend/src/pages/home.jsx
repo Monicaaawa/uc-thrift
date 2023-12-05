@@ -75,6 +75,7 @@ export default function Home() {
    
     // Default is newer items on top
     const reversedItems = items.slice().reverse();
+
     return reversedItems.map((item, index) => (
       <ItemPreview key={index} item={item} />
     ));

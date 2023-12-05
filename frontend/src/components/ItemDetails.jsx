@@ -6,7 +6,7 @@ import Header from './Header';
 
 const URL = 'http://localhost:8080';
 
-export default function ItemDetails({ item }) {
+export default function ItemDetails({ item, userId: propUserId }) {
   const [seller, setSeller] = useState(null);
 
   async function fetchSellerInfo() {
@@ -16,10 +16,43 @@ export default function ItemDetails({ item }) {
     } catch (e) {
       console.error('Error fetching seller details:', e);
     }
-  } 
+  }
+  
+  let userId;
+
+    if (propUserId) 
+    {
+        userId = propUserId;
+    } 
+    
+    else 
+    { 
+        userId = sessionStorage.getItem('userId')
+    }
+
+    const [userData, setUserData] = useState(userId); 
+
+    const getUser = async (userId) => {
+        try 
+        {
+            if (userData === 'null') 
+            {
+                return;
+            }
+
+            const response = await axios.get(URL + '/users/' + userId);
+            setUserData(response.data);
+        }
+        
+        catch (error) 
+        {
+            console.error('Error fetching user data:', error);
+        }
+  };
 
   useEffect(() => {
     fetchSellerInfo();
+    getUser(userId);
   }, []);
 
   return (
@@ -45,17 +78,23 @@ export default function ItemDetails({ item }) {
           </div>
           <div className="seller-info">
             <h2 style = {{ marginBottom: 5 }}> Seller Information </h2>
-            {seller ? (
+            {userId ? (
               <>
-                <p>{seller.firstName} {seller.lastName} ({seller.rating}★)</p>
-                <p>{seller.email}</p>
+                {seller ? (
+                  <>
+                    <p>{seller.firstName} {seller.lastName} ({seller.rating}★)</p>
+                    <p>{seller.email}</p>
+                  </>
+                ) : (
+                  <p> This seller no longer exists. </p>
+                )}
               </>
             ) : (
-              <p> This seller no longer exists. </p>
+              <p> Please log in or sign up to see the seller information. </p>
             )}
           </div>
         </div>
       </div>
     </>
   );
-};
+}

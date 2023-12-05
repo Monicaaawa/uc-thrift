@@ -5,15 +5,15 @@ import Header from '../components/Header';
 import axios from 'axios'
 import { useState } from 'react'
 import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 
 const ProfilePage = ( { userId: propUserId } ) => {
 
 let userId;
-
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
- const [boughtRatings, setBoughtRatings] = useState([]);
+ const navigate = useNavigate()
 
  if (propUserId) {
   userId = propUserId;
@@ -28,18 +28,13 @@ const [userData, setUserData] = useState(userId);
 
  const getUser = async (userId) => {
    try {
-    if (userData === 'null') {
+    if (userId === null) {
       return;
     }
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
-
-   const { boughtRatings, soldRatings, boughtItems, soldItems } = response.data;
-
-    // Update ratings for the user
-    if (Array.isArray(boughtRatings)) {
-        setBoughtRatings(boughtRatings);
-      }
+     
+   const { soldRatings, boughtItems, soldItems } = response.data;
   
     if (Array.isArray(soldRatings)) {
         setSoldRatings(soldRatings);
@@ -69,11 +64,14 @@ const [userData, setUserData] = useState(userId);
 
  useEffect(() => {
   getUser(userId);
- }, []);
+ }, [userId]);
 
- // calculate user rating
-const calculateRating = (soldRatings, boughtRatings) => {
-  const allRatings = [...soldRatings, ...boughtRatings];
+const calculateRating = (soldRatings) => {
+  const allRatings = soldRatings;
+
+  if(allRatings.length === 0) {
+    return 5;
+  }
 
   // calculate average rating with equal weight given to sold and bought ratings
   const sum = allRatings.reduce((total, rating) => total + rating, 0);
@@ -82,44 +80,54 @@ const calculateRating = (soldRatings, boughtRatings) => {
   return roundedRating;
  }
 
+ const handleSignOut = () => {
+  // Clear the user session data upon sign-out
+  sessionStorage.removeItem('userId');
+  
+  // Optionally, redirect the user to the login page or another appropriate route
+  // navigate('/login'); // Redirect to the login page after sign-out
+  navigate('/');
+
+};
+
+
  //sample user - use temporarily for reviews section
- const user = {
-   name: 'Joe Bruin',
-   email: 'joebruin@gmail.com',
-   phone: '(111) 111-1111',
-   city: 'Los Angeles',
-   state: 'CA',
-   rating: 4.5,
-   hasReview: true,
-   numOfSoldItems: 4,
-   numOfRatings: 3,
-   numOfBoughtItems: 4,
-   soldItems: [
-     { id: 1, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-     { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-     { id: 4, name: 'Desk Lamp', image: 'image4.jpg'},
-     { id: 5, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 6, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 7, name: 'Math 33a Textbook', image: 'image1.jpg' },
-     { id: 8, name: 'Math 33a Textbook', image: 'image1.jpg' }
+//  const user = {
+//    name: 'Joe Bruin',
+//    email: 'joebruin@gmail.com',
+//    phone: '(111) 111-1111',
+//    city: 'Los Angeles',
+//    state: 'CA',
+//    rating: 4.5,
+//    hasReview: true,
+//    numOfSoldItems: 4,
+//    numOfRatings: 3,
+//    numOfBoughtItems: 4,
+//    soldItems: [
+//      { id: 1, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
+//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
+//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'},
+//      { id: 5, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 6, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 7, name: 'Math 33a Textbook', image: 'image1.jpg' },
+//      { id: 8, name: 'Math 33a Textbook', image: 'image1.jpg' }
 
 
-   ],
-   boughtItems: [
-     { id: 1, name: 'Math 33a Textbook', image: 'image1.png' },
-     { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
-     { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
-     { id: 4, name: 'Desk Lamp', image: 'image4.jpg'}
-   ],
+//    ],
+//    boughtItems: [
+//      { id: 1, name: 'Math 33a Textbook', image: 'image1.png' },
+//      { id: 2, name: 'Arduino Kit', image: 'image2.jpg' },
+//      { id: 3, name: 'Racing T-shirt', image: 'image3.jpg' },
+//      { id: 4, name: 'Desk Lamp', image: 'image4.jpg'}
+//    ],
 
-
-   reviewsList: [
-     { id: 1, name: 'Josie Bruin', comment: 'Very good!', rating: 3},
-     { id: 2, name: 'Bob Joe', comment: 'Eh, it was ok.', rating: 4},
-     { id: 3, name: 'Aunt Sally', comment: 'THE ABSOLUTE BEST!', rating: 5},
-   ]
- }
+//    reviewsList: [
+//      { id: 1, name: 'Josie Bruin', comment: 'Very good!', rating: 3},
+//      { id: 2, name: 'Bob Joe', comment: 'Eh, it was ok.', rating: 4},
+//      { id: 3, name: 'Aunt Sally', comment: 'THE ABSOLUTE BEST!', rating: 5},
+//    ]
+//  }
 
  return (
   <div className="page-container">
@@ -131,15 +139,14 @@ const calculateRating = (soldRatings, boughtRatings) => {
       <div className="profile-container">
       <div className="profile-details">
         <div className="profile-name">
-          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2>
+          {/* <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings, boughtRatings)}★)</span>}</h2> */}
+          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings)}★)</span>}</h2>
         </div>
  
         <div className="profile-detail-others">
           <p className="profile-detail-text"> {userData.campus}</p>
           <br></br>
           <p className="profile-detail-text"> {userData.email}</p>
-          <p className="profile-detail-text">  phone number </p>
-          <p className="profile-detail-text"> city, state </p>
         </div>
       </div>
 
@@ -183,7 +190,10 @@ const calculateRating = (soldRatings, boughtRatings) => {
     )}
     </div>
 
-    <div className="ratings-container">
+    <button className="sign-in-out-button"onClick={handleSignOut}>Sign Out</button>
+
+
+    {/* <div className="ratings-container">
        <h3 className="small-header">Ratings ({user.numOfRatings})</h3>
        {user.numOfRatings === 0 ? (
          <p className="no-items-message">No ratings to show.</p>
@@ -207,13 +217,15 @@ const calculateRating = (soldRatings, boughtRatings) => {
            ))}
          </ul>      
        )}
-     </div>
+     </div> */}
     </div>
-
     ) : (
       // if userId is null or undefined
-      <div>
+      <div className="not-signed-in-message">
         <h1>Not signed in. Please sign in to see profile info.</h1>
+        <Link to="/login">
+                <button className="sign-in-out-button">Go to Login</button>
+            </Link>
       </div>
     )}
   </div>
