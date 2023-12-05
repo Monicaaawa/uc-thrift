@@ -59,7 +59,7 @@ function sendEmail(to, subject, html) {
     });
 }
 
-connection = "mongodb+srv://jayeNay:Ci23gVe5PJXFDmd8@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
 
 // INIT CONNECTION
 mongoose
