@@ -72,6 +72,7 @@ export default function Home() {
     if (!items) {
       return <p>Loading...</p>;
     }
+    
     if (sorted) {
       return items.map((item, index) => (
         <ItemPreview key={index} item={item} />

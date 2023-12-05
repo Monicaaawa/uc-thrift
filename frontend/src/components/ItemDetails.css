@@ -1,8 +1,6 @@
 .item-details {
-    top: 190px;
-    padding-left: 100px;
-    padding-right: 100px;
-    padding-bottom: 100px;
+    top: 50px;
+    padding: 100px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -14,7 +12,7 @@
 .everything-but-image {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 45px;
     flex-grow: 1;
     width: 50vw;
 }
@@ -35,6 +33,29 @@
     align-items: flex-start;
     word-break: break-all;
     gap: 50px;
+}
+
+.desc-seller {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.sell-item {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+#buyer-email {
+    color: #293745;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-indent: 15px;
+    text-transform: uppercase;
+    height: 50px;
+    border: 2px solid #293745;
+    flex: 1;
 }
 
 @media (max-width: 800px) {

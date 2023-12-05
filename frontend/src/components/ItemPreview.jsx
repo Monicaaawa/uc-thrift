@@ -7,7 +7,7 @@ import axios from 'axios';
 const URL = 'http://localhost:8080';
 
 export default function ItemPreview({ item }) {
-  const [seller, setSeller] = useState(null);
+  const [seller, setSeller] = useState();
 
   async function fetchSellerInfo() {
     try {
@@ -19,8 +19,10 @@ export default function ItemPreview({ item }) {
   } 
 
   useEffect(() => {
-    fetchSellerInfo();
-  }, []);
+    if (item.sellerId) {
+      fetchSellerInfo();
+    }
+  }, [item.sellerId]);
 
   const calculateRating = (soldRatings) => {
     const allRatings = soldRatings;

@@ -261,7 +261,7 @@ app.post('/items/sold/:itemId', async (req, res) => {
         const itemId = req.params.itemId;
 
         const item = await Item.findById(itemId);
-        const seller = await User.findById(item.seller);
+        const seller = await User.findById(item.sellerId);
         const buyer = await User.findById(buyerId);
 
         if (!item || !seller || !buyer) {
@@ -318,6 +318,22 @@ app.get('/users/:_id', async (req, res) => {
         res.json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Get user by email
+app.get('/users/email/:email', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.params.email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
