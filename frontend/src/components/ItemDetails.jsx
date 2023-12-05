@@ -35,7 +35,7 @@ export default function ItemDetails({ item, userId: propUserId }) {
     const getUser = async (userId) => {
         try 
         {
-            if (userData === 'null') 
+            if (userId === null) 
             {
                 return;
             }

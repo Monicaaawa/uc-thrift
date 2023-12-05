@@ -23,7 +23,7 @@ const Header = ({ userId: propUserId }) => {
     const getUser = async (userId) => {
         try 
         {
-            if (userData === 'null') 
+            if (userId === null) 
             {
                 return;
             }
