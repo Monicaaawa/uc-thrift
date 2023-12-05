@@ -15,7 +15,6 @@ let userId;
  const [soldRatings, setSoldRatings] = useState([]);
  const navigate = useNavigate()
 
-
  if (propUserId) {
   userId = propUserId;
 } else { 
@@ -34,7 +33,7 @@ const [userData, setUserData] = useState(userId);
     }
    const response = await axios.get(URL + '/users/' + userId);
    setUserData(response.data);
-
+     
    const { soldRatings, boughtItems, soldItems } = response.data;
   
     if (Array.isArray(soldRatings)) {

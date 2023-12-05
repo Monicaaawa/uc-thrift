@@ -78,67 +78,38 @@ const User = require('./models/user');
 app.listen(8080, () => console.log('Server listening on port 8080: http://localhost:8080'));
     
 // ITEMS ENDPOINTS
-// // Get all items
-// app.get('/items', async (req, res) => {
-//     try {
-//         const items = await Item.find();
-//         res.json(items);
-//     } catch (error) {
-//         console.error('Error fetching items:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// });
-
-// Get paginated items
+// Get searched, sorted, and/or paginated items
 app.get('/items', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const perPage = parseInt(req.query.perPage) || 6;
     const skip = (page - 1) * perPage;
-  
-    try {
-        const items = await Item.find().skip(skip).limit(perPage);
-        res.json(items);
-    } catch (error) {
-        console.error('Error fetching paginated items:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
 
-// Get searched items
-app.get('/items/search', async (req, res) => {
     try {
+        let items;
+
         const search = req.query.search || '';
-        const items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
-        res.json(items);
-    } catch (error) {
-        console.error('Error fetching searched items:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+        const filter = req.query.filter || '';
 
-// Get filtered items
-app.get('/items/filter', async (req, res) => {
-    try {
-        const { filter } = req.query;
-        const items = await Item.find();
-        const users = await User.find();
-        let sortedItems;
-        let sortedUsers;
-        if (filter === 'name') {
-            sortedItems = items.sort((a, b) => a.title.localeCompare(b.title));
-        } else if (filter === 'date') {
-            sortedItems = items.sort((a, b) => b.timestamp - a.timestamp);
-        } else if (filter === 'price-low') {
-            sortedItems = items.sort((a, b) => a.price - b.price);
-        } else if (filter === 'price-high') {
-            sortedItems = items.sort((a, b) => b.price - a.price);
+        if (search) {
+            items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
         } else {
-            console.log('Other filters are not available');
+            items = await Item.find();
+        }
+        if (filter === 'name') {
+            items = items.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (filter === 'date') {
+            items = items.sort((a, b) => b.timestamp - a.timestamp);
+        } else if (filter === 'price-low') {
+            items = items.sort((a, b) => a.price - b.price);
+        } else if (filter === 'price-high') {
+            items = items.sort((a, b) => b.price - a.price);
         }
 
-        res.json(sortedItems);
+        const paginatedItems = items.slice(skip, skip + perPage);
+
+        res.json(paginatedItems);
     } catch (error) {
-        console.error('Error fetching and filtering items:', error);
+        console.error('Error fetching and paginating items:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

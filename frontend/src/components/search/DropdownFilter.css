@@ -1,13 +1,10 @@
-.filter-box {
-    position: absolute;
-    display: flex; 
-    min-width: 100px;
-    margin: 0 50px;
-    top: 190px;
-}
-
-.filter-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+.chip {
+    background-color: #293745;
+    color: white;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
+    width: fit-content;
+    padding: 8px 12px;
+    display: inline-block;
 }

@@ -23,7 +23,7 @@ const Header = ({ userId: propUserId }) => {
     const getUser = async (userId) => {
         try 
         {
-            if (userId === null) 
+            if (userData === 'null') 
             {
                 return;
             }
@@ -46,7 +46,7 @@ const Header = ({ userId: propUserId }) => {
         <div className="container">
             <NavLink to="/" className = "nav-link web"> <img src="../../../src/assets/ucthrift.svg" alt="logo" /> </NavLink>
             <NavLink to="/" className = "nav-link mobile"> <img src="/uct.png" alt="logo" /> </NavLink>
-            <Searchbar />
+            <NavLink to="/profile" className = "nav-link"> <img src = "https://via.placeholder.com/45x45" alt = "placeholder" /> </NavLink>
             {userId ? (
                 <div className = "profile-post">
                     <NavLink to = "/post" className = "nav-link"> <img src = {post} alt = "post icon" width = "20" /></NavLink>
@@ -63,4 +63,3 @@ const Header = ({ userId: propUserId }) => {
 }
 
 export default Header;
-
