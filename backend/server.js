@@ -138,7 +138,7 @@ app.get('/items/filter', async (req, res) => {
 
         res.json(sortedItems);
     } catch (error) {
-        console.error('Error fetching and filtering items:', error);
+        console.error('Error fetching and paginating items:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -492,3 +492,25 @@ app.delete('/users/delete-profile-picture/:userId', async (req, res) => {
 
     res.send('Profile picture deleted successfully');
 });
+
+// Update user ratings
+app.put('/users/ratings', async (req, res) => {
+    const { userEmail, userRating } = req.body;
+  
+    try {
+      const user = await User.findOne({ email: userEmail });
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      user.soldRatings.push(userRating);
+      await user.save();
+  
+      res.json({ message: 'Rating updated successfully', user });
+    } catch (error) {
+      console.error('Error updating user rating:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+  
