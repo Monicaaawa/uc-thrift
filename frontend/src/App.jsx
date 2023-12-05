@@ -5,6 +5,7 @@ import Register from './pages/signup';
 import Login from './pages/signin';
 import DetailsPage from './pages/details';
 import PostPage from './pages/post';
+import RatingForm from './pages/review';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/item/:itemId" element={<DetailsPage />} />
         <Route path="/post" element={<PostPage />} />
+        <Route path="/review/:itemId/buyer" element={<RatingForm />} />
+        <Route path="/review/:itemId/seller" element={<RatingForm />} />
       </Routes>
     </Router>
   );
