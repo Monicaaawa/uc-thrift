@@ -19,6 +19,7 @@ const Header = ({ userId: propUserId }) => {
     }
 
     const [userData, setUserData] = useState(userId); 
+    const URL = "http://localhost:8080"
 
     const getUser = async (userId) => {
         try 
