@@ -35,7 +35,7 @@ export default function ItemDetails({ item, userId: propUserId }) {
     const getUser = async (userId) => {
         try 
         {
-            if (userData === 'null') 
+            if (userId === null) 
             {
                 return;
             }
@@ -54,6 +54,20 @@ export default function ItemDetails({ item, userId: propUserId }) {
     fetchSellerInfo();
     getUser(userId);
   }, []);
+
+  const calculateRating = (soldRatings) => {
+    const allRatings = soldRatings;
+  
+    if(allRatings.length === 0) {
+      return 5;
+    }
+  
+    // calculate average rating with equal weight given to sold and bought ratings
+    const sum = allRatings.reduce((total, rating) => total + rating, 0);
+    const averageRating = allRatings.length > 0 ? sum / allRatings.length : 0;
+    const roundedRating = Number(averageRating.toFixed(1)); 
+    return roundedRating;
+   }
 
   return (
     <>
@@ -82,7 +96,7 @@ export default function ItemDetails({ item, userId: propUserId }) {
               <>
                 {seller ? (
                   <>
-                    <p>{seller.firstName} {seller.lastName} ({seller.rating}★)</p>
+                    <p>{seller.firstName} {seller.lastName} ({calculateRating(seller.soldRatings)}★)</p>
                     <p>{seller.email}</p>
                   </>
                 ) : (

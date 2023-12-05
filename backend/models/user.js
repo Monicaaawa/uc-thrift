@@ -56,15 +56,7 @@ const User = mongoose.model("User", new mongoose.Schema({
           type: Number, 
         }],
         default: [], 
-    },
-
-    boughtRatings: {
-        type: [{
-          type: Number, 
-        }],
-        default: [], 
     }
-
 }));
 
 module.exports = User;
