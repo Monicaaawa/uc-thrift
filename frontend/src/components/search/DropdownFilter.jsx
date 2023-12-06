@@ -15,11 +15,11 @@ const DropdownFilter = ({ onFilter, selectedFilter }) => {
   return (
     <>
       <div>
-        <label htmlFor="filter">Sort By: </label>
-        <select className="chip" name="filter" value={filter} onChange={handleChangeFilter}>
-          <option value="">-- Please Select --</option>
-          <option value="name">Name</option>
+        <label htmlFor="filter">Sort By:&nbsp;&nbsp;</label>
+        <select name="filter" value={filter} onChange={handleChangeFilter}>
+          <option value="">--Please select--</option>
           <option value="date">Most recent</option>
+          <option value="name">Name</option>
           <option value="price-low">Price: low to high</option>
           <option value="price-high">Price: high to low</option>
         </select>

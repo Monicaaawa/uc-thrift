@@ -39,14 +39,16 @@ export default function ItemPreview({ item }) {
    }
 
   return (
-    <div className="item-preview">
+    <div>
         <Link to={`/item/${item._id}`}>
             <div className = "image-container">
+              <div className = "square-image">
+                <img className = "item-image" src = {item.image} alt={item.title} />
+              </div>
               <span className = "mini-chip"> {item.condition} </span>
               <span className = "price-chip">${item.price} </span>
-              <img className = "item-image" src = {item.image} alt={item.title} />
             </div>
-            <p> <TimeAgo timestamp={item.timestamp} /> </p>
+            <p style = {{ marginTop: 10 }}> <TimeAgo timestamp={item.timestamp} /> </p>
             <div className="seller-info">
             {seller ? (
                 <>

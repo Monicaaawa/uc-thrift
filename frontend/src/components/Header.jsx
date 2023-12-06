@@ -1,9 +1,8 @@
 import './Header.css';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-import Searchbar from './search/Searchbar';
-import post from '../assets/post.svg';
+import profile from '../assets/profile.svg';
 
 const URL = 'http://localhost:8080';
 
@@ -20,9 +19,6 @@ const Header = ({ userId: propUserId }) => {
         userId = sessionStorage.getItem('userId')
     }
 
-    const [userData, setUserData] = useState(userId); 
-    const URL = "http://localhost:8080"
-
     const getUser = async (userId) => {
         try 
         {
@@ -31,8 +27,7 @@ const Header = ({ userId: propUserId }) => {
                 return;
             }
 
-            const response = await axios.get(URL + '/users/' + userId);
-            setUserData(response.data);
+            await axios.get(URL + '/users/' + userId);
         }
         
         catch (error) 
@@ -49,11 +44,10 @@ const Header = ({ userId: propUserId }) => {
         <div className="container">
             <NavLink to="/" className = "nav-link web"> <img src="../../../src/assets/ucthrift.svg" alt="logo" /> </NavLink>
             <NavLink to="/" className = "nav-link mobile"> <img src="/uct.png" alt="logo" /> </NavLink>
-            <NavLink to="/profile" className = "nav-link"> <img src = "https://via.placeholder.com/45x45" alt = "placeholder" /> </NavLink>
             {userId ? (
                 <div className = "profile-post">
-                    <NavLink to = "/post" className = "nav-link"> <img src = {post} alt = "post icon" width = "20" /></NavLink>
-                    <NavLink to="/profile" className = "nav-link"> <img src = "https://via.placeholder.com/45x45" alt = "placeholder" /> </NavLink>
+                    <NavLink to = "/post" className = "nav-link"> <button> Post item </button></NavLink>
+                    <NavLink to="/profile" className = "nav-link"> <img src = {profile} width = "35" alt = "profile icon" /> </NavLink>
                 </div>
             ) : (
                 <div className = "buttons">

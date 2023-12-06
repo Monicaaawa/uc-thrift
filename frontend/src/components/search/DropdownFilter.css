@@ -1,10 +1,16 @@
-.chip {
-    background-color: #293745;
-    color: white;
+select {
+    color: #293745;
     font-family: 'Gotham Medium';
     font-size: 14px;
     text-transform: uppercase;
-    width: fit-content;
-    padding: 8px 12px;
-    display: inline-block;
+
+    border: 2px solid #293745;
+    padding: 8px;
+}
+
+label {
+    color: #293745;
+    font-family: 'Gotham Medium';
+    font-size: 14px;
+    text-transform: uppercase;
 }
