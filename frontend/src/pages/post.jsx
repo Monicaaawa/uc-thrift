@@ -12,43 +12,43 @@ export default function PostPage({ userId: propUserId }) {
 
   if (propUserId) 
   {
-      userId = propUserId;
+    userId = propUserId;
   } 
   
   else 
   { 
-      userId = sessionStorage.getItem('userId')
+    userId = sessionStorage.getItem('userId')
   }
 
   const [userData, setUserData] = useState(userId); 
 
   const getUser = async (userId) => {
-      try 
+    try 
+    {
+      if (userData === 'null') 
       {
-          if (userData === 'null') 
-          {
-              return;
-          }
+        return;
+      }
 
-          const response = await axios.get(URL + '/users/' + userId);
-          setUserData(response.data);
-      }
-      
-      catch (error) 
-      {
-          console.error('Error fetching user data:', error);
-      }
+      const response = await axios.get(URL + '/users/' + userId);
+      setUserData(response.data);
+    }
+    
+    catch (error) 
+    {
+      console.error('Error fetching user data:', error);
+    }
   };
     
   useEffect(() => {
-      getUser(userId);
+    getUser(userId);
   }, []);
 
   const [formData, setFormData] = useState({
     title: '',
     sellerId: userId,
     price: '',
-    condition: '',
+    condition: 'new',
     description: '',
     image: ''
   });
@@ -130,6 +130,7 @@ export default function PostPage({ userId: propUserId }) {
                     name="condition"
                     value={formData.condition}
                     onChange={handleChange}
+                    required
                   >              
                     <option value="new">New</option>
                     <option value="like new">Like New</option>
@@ -150,12 +151,12 @@ export default function PostPage({ userId: propUserId }) {
                   onChange={handleChange}
                 />
               </div>
-          < /div>
           </div>
-          <button type="submit">POST</button>
-        </form> ) : (
-          <h2 className = "page-center"> Please log in or sign up to post an item. </h2>
-        )}
+        </div>
+        <button type="submit">POST</button>
+      </form> ) : (
+        <h2 className = "page-center"> Please log in or sign up to post an item. </h2>
+      )}
     </>
   );
 };

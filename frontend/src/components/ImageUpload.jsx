@@ -3,6 +3,8 @@ import upload from '../assets/upload.svg';
 import './ImageUpload.css';
 import axios from 'axios';
 
+const URL = 'http://localhost:8080';
+
 const ImageUpload = ({ onImageUpload }) => {
     const [imageSrc, setImageSrc] = useState('');
     
@@ -18,8 +20,8 @@ const ImageUpload = ({ onImageUpload }) => {
             {
                 const response = await axios.post('http://localhost:8080/upload-image', formData);
                 const { imagePath } = response.data;
-                setImageSrc(imagePath);
-                onImageUpload(imagePath); // Communicate the URL back to the parent component
+                setImageSrc(`${URL}${imagePath}`);
+                onImageUpload(`${URL}${imagePath}`); // Communicate the URL back to the parent component
             }
             catch (error) 
             {

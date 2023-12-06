@@ -86,74 +86,72 @@ const calculateRating = (soldRatings) => {
 };
 
  return (
-  <div className="page-container">
-      <div className="sticky-header">
+  <>
     <Header />
-  </div>
     {userId ? (
       // If userId exists, render profile details
       <div className="profile-container">
-      <div className="profile-details">
-        <div className="profile-name">
-          <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings)}★)</span>}</h2>
+        <div>
+          <div className="profile-name">
+            <h2 className="profile-name-text">{userData.firstName} {userData.lastName} { <span>({calculateRating(soldRatings)}★)</span>}</h2>
+          </div>
+  
+          <div className="profile-detail-others">
+            <p className="profile-detail-text"> {userData.email}</p>
+            <br></br>
+            <p className="profile-detail-text"> {userData.campus}</p>
+          </div>
         </div>
- 
-        <div className="profile-detail-others">
-          <p className="profile-detail-text"> {userData.campus}</p>
-          <br></br>
-          <p className="profile-detail-text"> {userData.email}</p>
+
+        <div className="sold-items">
+          <h3 className="small-header">Sold Items ({soldItems.length})</h3>
+          {soldItems.length === 0 ? (
+            <p className="no-items-message">No items to show.</p>
+          ) : (
+          <div className="sold-items-container">
+            <ul className="sold-items-list">
+              {soldItems.map(item => (
+                <li key={item.id}>
+                  <div>
+                    {<img src={`./../../images/image1.jpg`} />}
+                  </div>
+                  <p>{item.title}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          )}
         </div>
-      </div>
 
-      <div className="sold-items">
-      <h3 className="small-header">Sold Items ({soldItems.length})</h3>
-      {soldItems.length === 0 ? (
-        <p className="no-items-message">No items to show.</p>
-      ) : (
-      <div className="sold-items-container">
-        <ul className="sold-items-list">
-          {soldItems.map(item => (
-            <li key={item.id}>
-              <div>
-                {<img src={`./../../images/image1.jpg`} />}
-              </div>
-              <p>{item.title}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      )}
-    </div>
+        <div className="bought-items">
+          <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
+          {boughtItems.length === 0 ? (
+            <p className="no-items-message">No items to show.</p>
+          ) : (
+            <div className="bought-items-container">
+              <ul className="bought-items-list">
+                {boughtItems.map(item => (
+                  <li key={item.id}>
+                    <div>
+                      {<img src={'./../../images/image1'} />}
+                      </div>
+                    <p>{item.title}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
 
-    <div className="bought-items">
-    <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
-    {boughtItems.length === 0 ? (
-      <p className="no-items-message">No items to show.</p>
-    ) : (
-      <div className="bought-items-container">
-        <ul className="bought-items-list">
-          {boughtItems.map(item => (
-            <li key={item.id}>
-              <div>
-                {<img src={'./../../images/image1'} />}
-                </div>
-              <p>{item.title}</p>
-            </li>
-          ))}
-        </ul>
+        <button className="sign-in-out-button"onClick={handleSignOut}>Sign Out</button>
       </div>
-    )}
-    </div>
-
-    <button className="sign-in-out-button"onClick={handleSignOut}>Sign Out</button>
-    </div>
     ) : (
       // if userId is null or undefined
       <div>
         <h2 className = "page-center">Not signed in. Please sign in to see profile info.</h2>
       </div>
     )}
-  </div>
+  </>
   );
 };
 

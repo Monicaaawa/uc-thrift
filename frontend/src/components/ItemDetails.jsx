@@ -24,35 +24,32 @@ export default function ItemDetails({ item, userId: propUserId }) {
   
   let userId;
 
-    if (propUserId) 
+  if (propUserId) 
+  {
+    userId = propUserId;
+  } 
+  
+  else 
+  { 
+    userId = sessionStorage.getItem('userId')
+  }
+
+  const getUser = async (userId) => {
+    try 
     {
-        userId = propUserId;
-    } 
-    
-    else 
-    { 
-        userId = sessionStorage.getItem('userId')
+      if (userId === null) 
+      {
+        return;
+      }
+
+      await axios.get(URL + '/users/' + userId);
     }
-
-    const getUser = async (userId) => {
-        try 
-        {
-            if (userId === null) 
-            {
-                return;
-            }
-
-            const response = await axios.get(URL + '/users/' + userId);
-            setUserData(response.data);
-        }
-        
-        catch (error) 
-        {
-            console.error('Error fetching user data:', error);
-        }
+    
+    catch (error) 
+    {
+      console.error('Error fetching user data:', error);
+    }
   };
-
-  const [userData, setUserData] = useState(userId); 
 
   const markAsSold = async (e) => {
     e.preventDefault();
@@ -66,19 +63,13 @@ export default function ItemDetails({ item, userId: propUserId }) {
         console.error('Error fetching buyer email:', e);
       }
       
-      axios.post(`${URL}/items/sold/${itemId}`, {buyerId})
-      .then(result => {
-        console.log(result)
-        if(result.data.message === "Item sold, users updated, emails sent")
-        {
-          console.log('Item marked as sold');
-          navigate('/');
-        }
-        else
-        {
-          console.error('Error marking item as sold:', result.data.error);
-        }
-      })
+      try {
+        await axios.post(`${URL}/items/sell/${itemId}`, {buyerId})
+        console.log('Item marked as sold');
+        navigate('/');
+      } catch (e) {
+        console.error('Error marking item as sold:', e);
+      }
     } catch (error) {
       console.error('Error marking item as sold:', error.message);
     }
@@ -93,7 +84,11 @@ export default function ItemDetails({ item, userId: propUserId }) {
     <>
       <Header />
       <div className = "item-details">
-        <img src = {item.image} alt={item.title} />
+        <div className = "image-holder">
+          <div className = "square-image">
+            <img src = {item.image} alt={item.title} />
+          </div>
+        </div>
         <div className = "everything-but-image">
           <div>
             <div className = "title">

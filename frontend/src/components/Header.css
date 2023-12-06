@@ -7,40 +7,7 @@
     padding-left: 20px;
     padding-right: 25px;
     width: 100%;
-    top: 15px;
-}
-
-.search-container {
-    display: flex; 
-    align-items: center;
-    width: 80vw;
-    padding: 0 50px;
-    position: relative;
-}
-
-.search-icon {
-    position: absolute;
-    width: 20px;
-    top: 50%;
-    right: 70px;
-    transform: translateY(-50%);
-}
-
-.search {
-    border: 2px solid #293745;
-    border-radius: 5px;
-    height: 45px;
-    width: 100%;
-
-    color: #293745;
-    font-family: 'Gotham Medium';
-    font-size: 14px;
-    text-indent: 15px;
-    text-transform: uppercase;
-}
-
-.search:focus-visible {
-    outline-color: #395c7b;
+    top: 17.5px;
 }
 
 .nav-link {
@@ -87,14 +54,6 @@
 
     .mobile img {
         height: 70px;
-    }
-
-    .search-container {
-        padding: 0 30px;
-    }
-
-    .search-icon {
-        right: 50px;
     }
 
     .login {

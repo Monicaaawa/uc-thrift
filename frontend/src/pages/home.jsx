@@ -78,11 +78,8 @@ export default function Home() {
         <ItemPreview key={index} item={item} />
       ));
     }
-   
-    // Default is newer items on top
-    const reversedItems = items.slice().reverse();
 
-    return reversedItems.map((item, index) => (
+    return items.map((item, index) => (
       <ItemPreview key={index} item={item} />
     ));
   }
@@ -112,25 +109,26 @@ export default function Home() {
 
   return (
     <>
-      <Header />
       <Searchbar onSearch={callAction}/>
+      <Header />
       <div className = "home-container">
         <div className = "rest-container">
           <div className = "top">
-            <span className = "item-info"> 
-              Items per page:&nbsp;&nbsp;
-              <select
-                className="items-per-page"
-                value={ITEMS_PER_PAGE}
-                onChange={(e) => handleItemsPerPageChange(e.target.value)}
-              >
-                <option value="12">12</option>
-                <option value="24">24</option>
-              </select>
-
+            <div className = "item-info"> 
               <span className = "chip">{count} Items </span>
-            </span>
-            <div className="chip">
+              <div>
+                Items per page:&nbsp;&nbsp;
+                <select
+                  className="items-per-page"
+                  value={ITEMS_PER_PAGE}
+                  onChange={(e) => handleItemsPerPageChange(e.target.value)}
+                >
+                  <option value="12">12</option>
+                  <option value="24">24</option>
+                </select>
+              </div>
+            </div>
+            <div>
               <DropdownFilter onFilter={callAction} selectedFilter={filteredChoice}/>
             </div>
           </div>

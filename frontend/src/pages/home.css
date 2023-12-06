@@ -12,7 +12,9 @@
 .top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .rest-container {
@@ -37,8 +39,8 @@
 
 .item-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 0fr));
-    gap: 30px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 50px;
     margin: 30px 0px;
     justify-content: space-between;
 }
@@ -53,11 +55,9 @@
 .pagination-button {
     width: 45px;
     margin: 0px 20px;
-    /* padding: 8px 16px; */
     background-color: white;
     color: #293745;
     border: solid 2px #293745;
-    /* border-radius: 4px; */
     cursor: pointer;
 }
 
@@ -103,6 +103,11 @@
 }
 
 .item-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap-reverse;
+
     color: #293745;
     font-family: 'Gotham Medium';
     font-size: 14px;
@@ -114,12 +119,17 @@
     font-family: 'Gotham Medium';
     font-size: 14px;
     text-transform: uppercase;
-    margin-right: 20px;
 }
 
 select {
     border: 2px solid #293745;
     padding: 8px;
+}
+
+@media (max-width: 1200px) {
+    .item-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 800px) {
@@ -128,11 +138,7 @@ select {
     }
 
     .item-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 0fr));
-        gap: 30px;
-        margin: 30px 0px;
-        justify-content: space-between;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .filter-container {
