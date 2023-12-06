@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 import Searchbar from './search/Searchbar';
 import post from '../assets/post.svg';
 
+const URL = 'http://localhost:8080';
+
 const Header = ({ userId: propUserId }) => {
     let userId;
 
@@ -19,6 +21,7 @@ const Header = ({ userId: propUserId }) => {
     }
 
     const [userData, setUserData] = useState(userId); 
+    const URL = "http://localhost:8080"
 
     const getUser = async (userId) => {
         try 

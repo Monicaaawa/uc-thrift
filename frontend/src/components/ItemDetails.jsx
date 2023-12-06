@@ -3,11 +3,15 @@ import axios from 'axios';
 import './ItemDetails.css';
 import TimeAgo from './TimeAgo';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 const URL = 'http://localhost:8080';
 
 export default function ItemDetails({ item, userId: propUserId }) {
-  const [seller, setSeller] = useState(null);
+  const [seller, setSeller] = useState();
+  const [buyerEmail, setBuyerEmail] = useState();
+  const [buyerId, setBuyerId] = useState();
+  const navigate = useNavigate()
 
   async function fetchSellerInfo() {
     try {
@@ -30,8 +34,6 @@ export default function ItemDetails({ item, userId: propUserId }) {
         userId = sessionStorage.getItem('userId')
     }
 
-    const [userData, setUserData] = useState(userId); 
-
     const getUser = async (userId) => {
         try 
         {
@@ -49,6 +51,38 @@ export default function ItemDetails({ item, userId: propUserId }) {
             console.error('Error fetching user data:', error);
         }
   };
+
+  const [userData, setUserData] = useState(userId); 
+
+  const markAsSold = async (e) => {
+    e.preventDefault();
+
+    try {
+      const itemId = item._id;
+      try {
+        const response = await axios.get(`${URL}/users/email/${buyerEmail}`);
+        setBuyerId(response.data._id);
+      } catch (e) {
+        console.error('Error fetching buyer email:', e);
+      }
+      
+      axios.post(`${URL}/items/sold/${itemId}`, {buyerId})
+      .then(result => {
+        console.log(result)
+        if(result.data.message === "Item sold, users updated, emails sent")
+        {
+          console.log('Item marked as sold');
+          navigate('/');
+        }
+        else
+        {
+          console.error('Error marking item as sold:', result.data.error);
+        }
+      })
+    } catch (error) {
+      console.error('Error marking item as sold:', error.message);
+    }
+  };  
 
   useEffect(() => {
     fetchSellerInfo();
@@ -92,6 +126,19 @@ export default function ItemDetails({ item, userId: propUserId }) {
               <p> Please log in or sign up to see the seller information. </p>
             )}
           </div>
+          {userId === item.sellerId && (
+            <form className = "sell-item" onSubmit = {markAsSold}>
+              <input
+                type="text"
+                id="buyer-email"
+                name="buyer-email"
+                onChange={(e) => setBuyerEmail(e.target.value)}
+                placeholder="Email of buyer"
+                required
+              />
+              <button type = "submit"> Mark as sold </button>
+            </form>
+          )}
         </div>
       </div>
     </>
