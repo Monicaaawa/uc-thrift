@@ -93,8 +93,7 @@ export default function ItemDetails({ item, userId: propUserId }) {
     <>
       <Header />
       <div className = "item-details">
-        {/* {item.image && <img src={item.image} alt={item.title} />} */}
-        <img src = "https://via.placeholder.com/400x400" alt = "placeholder" />
+        <img src = {item.image} alt={item.title} />
         <div className = "everything-but-image">
           <div>
             <div className = "title">

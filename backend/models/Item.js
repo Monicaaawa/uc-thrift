@@ -22,9 +22,9 @@ const Item = mongoose.model("Item", new mongoose.Schema({
         type: String,
         default: ""
     },
-    images: {
-        type: [String],
-        default: []
+    image: {
+        type: String,
+        default: ""
     },
     timestamp: {
         type: Number
