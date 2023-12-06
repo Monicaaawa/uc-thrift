@@ -53,7 +53,7 @@ export default function ItemDetails({ item, userId: propUserId }) {
 
   const markAsSold = async (e) => {
     e.preventDefault();
-
+  
     try {
       const itemId = item._id;
       try {
@@ -62,18 +62,23 @@ export default function ItemDetails({ item, userId: propUserId }) {
       } catch (e) {
         console.error('Error fetching buyer email:', e);
       }
-      
-      try {
-        await axios.post(`${URL}/items/sell/${itemId}`, {buyerId})
-        console.log('Item marked as sold');
-        navigate('/');
-      } catch (e) {
-        console.error('Error marking item as sold:', e);
-      }
     } catch (error) {
       console.error('Error marking item as sold:', error.message);
     }
   };  
+
+  useEffect(() => {
+    if (buyerId !== undefined) {
+      axios.put(`${URL}/items/sell/${item._id}`, { buyerId })
+        .then(() => {
+          console.log('Item marked as sold');
+          navigate('/');
+        })
+        .catch((error) => {
+          console.error('Error marking item as sold:', error);
+        });
+    }
+  }, [buyerId, item._id]);
 
   useEffect(() => {
     fetchSellerInfo();

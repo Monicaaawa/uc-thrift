@@ -231,7 +231,7 @@ app.post('/upload-image', upload.single('image'), async (req, res) => {
 });
 
 // Sold Item Handling
-app.post('/items/sell/:itemId', async (req, res) => {
+app.put('/items/sell/:itemId', async (req, res) => {
     try {
         const { buyerId } = req.body;
         const itemId = req.params.itemId;
