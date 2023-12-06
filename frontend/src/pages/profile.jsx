@@ -113,7 +113,7 @@ const calculateRating = (soldRatings) => {
               {soldItems.map(item => (
                 <li key={item.id}>
                   <div>
-                    {<img src={`./../../images/image1.jpg`} />}
+                    {<img src={item.image} />}
                   </div>
                   <p>{item.title}</p>
                 </li>
@@ -133,7 +133,7 @@ const calculateRating = (soldRatings) => {
                 {boughtItems.map(item => (
                   <li key={item.id}>
                     <div>
-                      {<img src={'./../../images/image1'} />}
+                      {<img src={item.image} />}
                       </div>
                     <p>{item.title}</p>
                   </li>
