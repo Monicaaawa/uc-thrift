@@ -50,7 +50,13 @@ const User = mongoose.model("User", new mongoose.Schema({
         }],
         default: []
     },
-
+    wishlistItems: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Item'
+        }],
+        default: []
+    },
     soldRatings: {
         type: [{
           type: Number, 
