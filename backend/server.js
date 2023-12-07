@@ -494,4 +494,28 @@ app.put('/users/ratings', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  
+app.put('/users/add-to-wishlist/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const itemId = req.body.itemId;
+
+    try {
+        const user = await User.findById(userId);
+        const item = await Item.findById(itemId);
+
+        if (!user || !item) {
+            return res.status(404).json({ error: 'User or item not found' });
+        }
+
+        if (user.wishlistItems.includes(itemId)) {
+            return res.status(400).json({ error: 'Item already in wishlist' });
+        }
+
+        user.wishlistItems.push(itemId);
+        await user.save();
+
+        res.json({ message: 'Item added to wishlist', user });
+    } catch (error) {
+        console.error('Error adding item to wishlist:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
