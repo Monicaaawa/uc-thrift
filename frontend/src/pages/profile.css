@@ -3,9 +3,12 @@
 }
  
 .profile-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
   position: absolute;
   width: 100%;
-  padding: 30px 100px;
+  padding: 50px 100px;
   top: 100px;
 }
  
@@ -18,13 +21,11 @@
 .profile-detail-others {
  line-height: 0.5;
  font-size: 18px;
- margin-bottom: 50px;
 }
  
 .profile-detail-text {
   line-height: 21.6px;
   font-size: 18px;
-  /* margin-bottom: 50px; */
 }
 
 .small-header {
@@ -33,28 +34,28 @@
   line-height: 28.8px;
 }
 
-.sold-items-list, .bought-items-list {
+.items-list {
   list-style: none;
   display: inline-flex;
   margin: 0;
   padding: 0;
 }
  
-.sold-items-container {
+.items-container {
   overflow-x: auto;
   white-space: nowrap;
 }
  
-.sold-items-list li, .bought-items-list li {
+.items-list li {
   margin-right: 10px;
   text-align: center;
 }
 
-.sold-items-list li div {
+.items-list li div {
   margin-bottom: 5px;
 }
 
-.sold-items-list img, .bought-items-list img {
+.items-list img {
   width: 250px;
   height: 250px;
   object-fit: cover;
@@ -115,11 +116,11 @@
 }
 
 .sign-in-out-button {
-  margin-top: 10%;
+  margin-top: 50px;
 }
 
 @media (max-width: 800px) {
   .profile-container {
-    padding: 30px 50px;
+    padding: 50px 50px;
   }
 }

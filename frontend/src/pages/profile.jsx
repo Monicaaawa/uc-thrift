@@ -11,6 +11,7 @@ const ProfilePage = ( { userId: propUserId } ) => {
 let userId;
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
+ const [postedItems, setPostedItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
  const navigate = useNavigate()
 
@@ -23,30 +24,31 @@ let userId;
 const [userData, setUserData] = useState(userId); 
 
 
- const URL = "http://localhost:8080"
+const URL = "http://localhost:8080"
 
- const getUser = async (userId) => {
-   try {
+const getUser = async (userId) => {
+  try {
     if (userId === null) {
       return;
     }
-   const response = await axios.get(URL + '/users/' + userId);
-   setUserData(response.data);
+    const response = await axios.get(URL + '/users/' + userId);
+    setUserData(response.data);
      
-   const { soldRatings, boughtItems, soldItems } = response.data;
+    const { soldRatings, boughtItems, soldItems, postedItems } = response.data;
   
     if (Array.isArray(soldRatings)) {
-        setSoldRatings(soldRatings);
-      }
+      setSoldRatings(soldRatings);
+    }
 
    // Fetch sold items details
-   const fetchedSoldItems = await Promise.all(
-     soldItems.map(async (itemId) => {
-       const itemResponse = await axios.get(URL + '/items/' + itemId);
-       return itemResponse.data;
-     })
-   );
-   setSoldItems(fetchedSoldItems);
+    const fetchedSoldItems = await Promise.all(
+      soldItems.map(async (itemId) => {
+        const itemResponse = await axios.get(URL + '/items/' + itemId);
+        return itemResponse.data;
+      })
+    );
+    setSoldItems(fetchedSoldItems);
+    
     // Fetch bought items details
     const fetchedBoughtItems = await Promise.all(
       boughtItems.map(async (itemId) => {
@@ -55,15 +57,23 @@ const [userData, setUserData] = useState(userId);
       })
     );
     setBoughtItems(fetchedBoughtItems);
-   }
-   catch (error) {
-   console.error('Error fetching user data:', error);
- }
+
+    // Fetch posted items details
+    const fetchedPostedItems = await Promise.all(
+      postedItems.map(async (itemId) => {
+        const itemResponse = await axios.get(URL + '/items/' + itemId);
+        return itemResponse.data;
+      })
+    );
+    setPostedItems(fetchedPostedItems);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
 };
 
- useEffect(() => {
+useEffect(() => {
   getUser(userId);
- }, [userId]);
+}, [userId]);
 
 const calculateRating = (soldRatings) => {
   const allRatings = soldRatings;
@@ -103,13 +113,33 @@ const calculateRating = (soldRatings) => {
           </div>
         </div>
 
-        <div className="sold-items">
+        <div>
+          <h3 className="small-header">Posted Items ({postedItems.length})</h3>
+          {postedItems.length === 0 ? (
+            <p className="no-items-message">No items to show.</p>
+          ) : (
+          <div className="items-container">
+            <ul className="items-list">
+              {postedItems.map(item => (
+                <li key={item.id}>
+                  <div>
+                    {<img src={item.image} />}
+                  </div>
+                  <p>{item.title}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          )}
+        </div>
+
+        <div>
           <h3 className="small-header">Sold Items ({soldItems.length})</h3>
           {soldItems.length === 0 ? (
             <p className="no-items-message">No items to show.</p>
           ) : (
-          <div className="sold-items-container">
-            <ul className="sold-items-list">
+          <div className="items-container">
+            <ul className="items-list">
               {soldItems.map(item => (
                 <li key={item.id}>
                   <div>
@@ -123,13 +153,13 @@ const calculateRating = (soldRatings) => {
           )}
         </div>
 
-        <div className="bought-items">
+        <div>
           <h3 className="small-header">Bought Items ({boughtItems.length})</h3>
           {boughtItems.length === 0 ? (
             <p className="no-items-message">No items to show.</p>
           ) : (
-            <div className="bought-items-container">
-              <ul className="bought-items-list">
+            <div className="items-container">
+              <ul className="items-list">
                 {boughtItems.map(item => (
                   <li key={item.id}>
                     <div>
