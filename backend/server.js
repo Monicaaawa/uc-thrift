@@ -34,17 +34,17 @@ app.use('/uploads', express.static('uploads'));
 
 // Setup mailing
 let transporter = nodemailer.createTransport({
-    service: 'Gmail', // e.g., 'Gmail'
+    service: 'Outlook',
     auth: {
-        user: '<email address>',
-        pass: '<password>'
+        user: 'thriftuc@outlook.com',
+        pass: 'ucthrift12345!'
     }
 });
 
 // Function to send mail
 function sendEmail(to, subject, html) {
     let mailOptions = {
-        from: '<email address>',
+        from: 'thriftuc@outlook.com',
         to: to,
         subject: subject,
         html: html
@@ -263,13 +263,13 @@ app.put('/items/sell/:itemId', async (req, res) => {
         sendEmail(
             buyer.email,
             "Item Purchase Confirmation",
-            `You have purchased an item. <a href="http://<domain>/items/review/${itemId}/buyer">Click here to review the item</a>.`
+            `You have purchased an item. Visit this link to review the item: http://localhost:5173/review`
         );
 
         sendEmail(
             seller.email,
             "Item Sold Confirmation",
-            `Your item has been sold. <a href="http://<domain>/items/review/${itemId}/seller">Click here to review the buyer</a>.`
+            `Your item has been sold. Visit this link to review the buyer: http://localhost:5173/review`
         );
 
         res.json({ message: 'Item sold, users updated, emails sent' });
