@@ -7,10 +7,3 @@ select {
     border: 2px solid #293745;
     padding: 8px;
 }
-
-label {
-    color: #293745;
-    font-family: 'Gotham Medium';
-    font-size: 14px;
-    text-transform: uppercase;
-}

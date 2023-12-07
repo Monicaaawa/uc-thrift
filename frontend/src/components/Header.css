@@ -17,6 +17,7 @@
 
 .web img {
     height: 70px;
+    z-index: 2;
 }
 
 .mobile {
@@ -30,6 +31,7 @@
 .buttons {
     display: flex;
     gap: 10px;
+    z-index: 2;
 }
 
 .login {
@@ -41,6 +43,7 @@
 .profile-post {
     display: flex;
     gap: 30px;
+    z-index: 2;
 }
 
 @media (max-width: 800px) {

@@ -111,8 +111,8 @@ export default function Home() {
 
   return (
     <>
-      <Searchbar onSearch={callAction}/>
       <Header />
+      <Searchbar onSearch={callAction}/>
       <div className = "home-container">
         <div className = "rest-container">
           <div className = "top">
