@@ -244,6 +244,9 @@ app.put('/items/sell/:itemId', async (req, res) => {
             return res.status(404).json({ error: 'Item or users not found' });
         }
 
+        item.available = false;
+        await item.save();
+
         seller.soldItems.push(item._id);
         seller.postedItems.pop(item._id);
         buyer.boughtItems.push(item._id);

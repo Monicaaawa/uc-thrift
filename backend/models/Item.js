@@ -28,6 +28,10 @@ const Item = mongoose.model("Item", new mongoose.Schema({
     },
     timestamp: {
         type: Number
+    },
+    available: {
+        type: Boolean,
+        default: true
     }
 }));
 

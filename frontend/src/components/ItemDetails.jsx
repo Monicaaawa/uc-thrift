@@ -126,8 +126,8 @@ export default function ItemDetails({ item, userId: propUserId }) {
               <p> Please log in or sign up to see the seller information. </p>
             )}
           </div>
-          {userId === item.sellerId && (
-            <form className = "sell-item" onSubmit = {markAsSold}>
+          {userId === item.sellerId && item.available === true && (
+            <form className="sell-item" onSubmit={markAsSold}>
               <input
                 type="text"
                 id="buyer-email"
@@ -136,8 +136,11 @@ export default function ItemDetails({ item, userId: propUserId }) {
                 placeholder="Email of buyer"
                 required
               />
-              <button type = "submit"> Mark as sold </button>
+              <button type="submit"> Mark as sold </button>
             </form>
+          )}
+          {item.available === false && (
+            <h2> This item has been sold. </h2>
           )}
         </div>
       </div>
