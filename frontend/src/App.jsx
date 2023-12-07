@@ -17,8 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/item/:itemId" element={<DetailsPage />} />
         <Route path="/post" element={<PostPage />} />
-        <Route path="/review/:itemId/buyer" element={<RatingForm />} />
-        <Route path="/review/:itemId/seller" element={<RatingForm />} />
+        <Route path="/review" element={<RatingForm />} />
       </Routes>
     </Router>
   );
