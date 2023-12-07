@@ -15,7 +15,7 @@ const DropdownFilter = ({ onFilter, selectedFilter }) => {
   return (
     <>
       <div>
-        <label htmlFor="filter">Sort By:&nbsp;&nbsp;</label>
+        <label style = {{ fontSize: 14, fontFamily: 'Gotham Medium'}} htmlFor="filter">Sort By:&nbsp;&nbsp;</label>
         <select name="filter" value={filter} onChange={handleChangeFilter}>
           <option value="">--Please select--</option>
           <option value="date">Most recent</option>

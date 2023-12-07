@@ -32,6 +32,6 @@ input {
     padding: 8px;
 }
 
-select {
+.review-container select {
     width: 450px;
 }
