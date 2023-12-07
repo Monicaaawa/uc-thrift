@@ -59,7 +59,7 @@ function sendEmail(to, subject, html) {
     });
 }
 
-connection = "mongodb+srv://<username>:<password>@ucthrift-dev.xpujbsq.mongodb.net"
+connection = "mongodb+srv://monicasyye:XqZjXMVXsueYWJLW@ucthrift-dev.xpujbsq.mongodb.net/"
 
 // INIT CONNECTION
 mongoose
@@ -91,9 +91,12 @@ app.get('/items', async (req, res) => {
         const filter = req.query.filter || '';
 
         if (search) {
-            items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
+            items = await Item.find({ 
+                title: { $regex: new RegExp(search, 'i') },
+                available: true
+            });
         } else {
-            items = await Item.find();
+            items = await Item.find({ available: true });
         }
         if (filter === 'name') {
             items = items.sort((a, b) => a.title.localeCompare(b.title));
@@ -122,9 +125,12 @@ app.get('/items/count', async (req, res) => {
         const search = req.query.search || '';
 
         if (search) {
-            items = await Item.find({ title: { $regex: new RegExp(search, 'i') } });
+            items = await Item.find({ 
+                title: { $regex: new RegExp(search, 'i') },
+                available: true
+            });
         } else {
-            items = await Item.find();
+            items = await Item.find({ available: true });
         }
 
         res.json(items.length);
