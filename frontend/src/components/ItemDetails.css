@@ -62,6 +62,10 @@
     height: 60vh;
 }
 
+.item-details button {
+    width: 200px;
+}
+
 @media (max-width: 800px) {
     .item-details {
         padding-left: 30px;

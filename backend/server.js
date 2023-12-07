@@ -494,9 +494,11 @@ app.put('/users/ratings', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+
+// Wishlist
 app.put('/users/add-to-wishlist/:userId', async (req, res) => {
     const userId = req.params.userId;
-    const itemId = req.body.itemId;
+    const {itemId} = req.body;
 
     try {
         const user = await User.findById(userId);
