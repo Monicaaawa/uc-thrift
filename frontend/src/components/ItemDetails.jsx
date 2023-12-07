@@ -11,6 +11,8 @@ export default function ItemDetails({ item, userId: propUserId }) {
   const [seller, setSeller] = useState();
   const [buyerEmail, setBuyerEmail] = useState();
   const [buyerId, setBuyerId] = useState();
+  const [hasItemInWishlist, setHasItemInWishlist] = useState();
+  const [wantInWishlist, setWantInWishlist] = useState(false);
   const navigate = useNavigate()
 
   async function fetchSellerInfo() {
@@ -53,19 +55,18 @@ export default function ItemDetails({ item, userId: propUserId }) {
 
   const markAsSold = async (e) => {
     e.preventDefault();
-  
     try {
-      const itemId = item._id;
-      try {
-        const response = await axios.get(`${URL}/users/email/${buyerEmail}`);
-        setBuyerId(response.data._id);
-      } catch (e) {
-        console.error('Error fetching buyer email:', e);
-      }
-    } catch (error) {
-      console.error('Error marking item as sold:', error.message);
+      const response = await axios.get(`${URL}/users/email/${buyerEmail}`);
+      setBuyerId(response.data._id);
+    } catch (e) {
+      console.error('Error fetching buyer email:', e);
     }
   };  
+
+  const addToWishlist = async (e) => {
+    e.preventDefault();
+    setWantInWishlist(true);
+  };
 
   useEffect(() => {
     if (buyerId !== undefined) {
@@ -79,6 +80,20 @@ export default function ItemDetails({ item, userId: propUserId }) {
         });
     }
   }, [buyerId, item._id]);
+
+  useEffect(() => {
+    if (wantInWishlist === true) {
+      const itemId = item._id;
+      axios.put(`${URL}/users/add-to-wishlist/${userId}`, {itemId})
+        .then(() => {
+          setHasItemInWishlist(true);
+          console.log('Item added to wishlist');
+        })
+        .catch((error) => {
+          console.error('Error adding item to wishlist:', error);
+        });
+    }
+  }, [wantInWishlist]);
 
   useEffect(() => {
     fetchSellerInfo();
@@ -138,6 +153,9 @@ export default function ItemDetails({ item, userId: propUserId }) {
               />
               <button type="submit"> Mark as sold </button>
             </form>
+          )}
+          {userId !== item.sellerId && item.available === true && !hasItemInWishlist && (
+            <button onClick = {addToWishlist}> Add to wishlist </button>
           )}
           {item.available === false && (
             <h2> This item has been sold. </h2>

@@ -12,6 +12,7 @@ let userId;
  const [boughtItems, setBoughtItems] = useState([]);
  const [soldItems, setSoldItems] = useState([]);
  const [postedItems, setPostedItems] = useState([]);
+ const [wishlistItems, setWishlistItems] = useState([]);
  const [soldRatings, setSoldRatings] = useState([]);
  const navigate = useNavigate()
 
@@ -34,7 +35,7 @@ const getUser = async (userId) => {
     const response = await axios.get(URL + '/users/' + userId);
     setUserData(response.data);
      
-    const { soldRatings, boughtItems, soldItems, postedItems } = response.data;
+    const { soldRatings, boughtItems, soldItems, postedItems, wishlistItems } = response.data;
   
     if (Array.isArray(soldRatings)) {
       setSoldRatings(soldRatings);
@@ -66,6 +67,15 @@ const getUser = async (userId) => {
       })
     );
     setPostedItems(fetchedPostedItems);
+
+    // Fetch wishlist items details
+    const fetchedWishlistItems = await Promise.all(
+      wishlistItems.map(async (itemId) => {
+        const itemResponse = await axios.get(URL + '/items/' + itemId);
+        return itemResponse.data;
+      })
+    );
+    setWishlistItems(fetchedWishlistItems);
   } catch (error) {
     console.error('Error fetching user data:', error);
   }
@@ -161,6 +171,26 @@ const calculateRating = (soldRatings) => {
             <div className="items-container">
               <ul className="items-list">
                 {boughtItems.map(item => (
+                  <li key={item.id}>
+                    <div>
+                      {<img src={item.image} />}
+                      </div>
+                    <p>{item.title}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <h3 className="small-header">Wishlist ({wishlistItems.length})</h3>
+          {wishlistItems.length === 0 ? (
+            <p className="no-items-message">No items to show.</p>
+          ) : (
+            <div className="items-container">
+              <ul className="items-list">
+                {wishlistItems.map(item => (
                   <li key={item.id}>
                     <div>
                       {<img src={item.image} />}
