@@ -51,7 +51,9 @@ export default function Home() {
           response = await axios.get(`${URL}/items?page=${currentPage}&perPage=${ITEMS_PER_PAGE}`);
           setSorted(false);
         }
-        setItems(response.data);
+
+        const availableItems = response.data.filter(item => item.available);
+        setItems(availableItems);
       } catch (e) {
         console.error('Error fetching items:', e);
       }
